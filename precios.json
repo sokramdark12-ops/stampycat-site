@@ -5,13 +5,8 @@
     "oversize": 14800
   },
   "estampados": {
-    "serigrafia1": 800,
-    "serigrafia2": 1500,
-    "dtf": 2800,
-    "sublimacion": 3200,
-    "vinilo": 1800
+    "vinilo": 1800,
+    "sublimacion": 3200
   },
-  "Extras": {
-    "Extra": 4000
-  }
+  "extra_por_unidad": 4000
 }
