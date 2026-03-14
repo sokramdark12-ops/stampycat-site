@@ -1,68 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<!-- En el <head> o antes del </body> -->
-<script>
-  let precios = {}; // variable global para los precios
-
-  // Cargar precios al iniciar la página
-  fetch('precios.json')           // o 'data/precios.json' si está en carpeta
-    .then(response => {
-      if (!response.ok) throw new Error('No se pudo cargar precios.json');
-      return response.json();
-    })
-    .then(data => {
-      precios = data;
-      console.log('Precios cargados correctamente', precios);
-    })
-    .catch(error => {
-      console.error('Error cargando precios:', error);
-      alert('No se pudieron cargar los precios. Usando valores por defecto.');
-      // valores fallback si falla
-      precios = {
-        remeras: { basica: 10000, premium: 14000, oversize: 16000 },
-        estampados: { serigrafia1: 1000, serigrafia2: 2000 /* etc */ },
-        Extras: { Extra: 4000 }
-      };
-    });
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stampycat Sublimación - Calculadora de Precios</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 25px; background: #f9f9f9; }
-        h1 { color: #d2691e; }
-    </style>
-</head>
-<body>
-    <h1>¡Bienvenido a Stampycat!</h1>
-    <p>Calcula el precio de tus productos aquí</p>
-    
-<!DOCTYPE html>
-<html lang="es">
-<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Calculadora Personalizados - Estilo Cómic</title>
 
-  <!-- Google Fonts (opcional – podés quitar el link si no querés cargar de internet) -->
+  <!-- Google Fonts (opcional) -->
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* ────────────────────────────────────────────────
-         COLORES → CAMBIA ACÁ TODA LA PALETA
-      ──────────────────────────────────────────────── */
-      --primary: #6200ea; /* Violeta principal (botones, bordes) */
-      --primary-dark: #3700b3; /* Hover / más oscuro */
-      --secondary: #304ffe; /* Azul eléctrico cómic */
-      --accent: #ff4081; /* Rosa fuerte para highlights si querés */
-      --bg-light: #f3e5f5; /* Fondo violeta muy suave */
-      --text-dark: #1a0033; /* Texto principal */
-      --text-muted: #4a148c; /* Violeta grisáceo */
-      --success: #00c853; /* Verde éxito / resultados */
+      /* COLORES – CAMBIA ACÁ */
+      --primary: #6200ea;       
+      --primary-dark: #3700b3;  
+      --secondary: #304ffe;     
+      --bg-light: #f3e5f5;      
+      --text-dark: #1a0033;     
+      --text-muted: #4a148c;    
+      --success: #00c853;       
       --white: #ffffff;
-      --shadow: rgba(100, 50, 200, 0.18);
+      --shadow: rgba(100, 50, 200, 0.12);   /* más suave */
     }
 
     body {
@@ -78,10 +35,8 @@
       text-align: center;
       color: var(--primary);
       font-family: 'Bangers', cursive;
-      font-size: 2.4rem;
-      text-shadow: 
-  4px 4px 6px color-mix(in srgb, var(--secondary) 20%, transparent),
-  6px 6px 10px rgba(0,0,0, 0.06);
+      font-size: 3.2rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.15);   /* sombra más suave y transparente */
       margin: 20px 0 8px;
     }
 
@@ -239,9 +194,6 @@
       font-size: 0.95rem;
     }
 
-    /* ────────────────────────────────────────────────
-       RESPONSIVE – CELULAR
-    ──────────────────────────────────────────────── */
     @media (max-width: 640px) {
       h1 { font-size: 2.6rem; }
       .container { padding: 20px; }
@@ -256,7 +208,7 @@
 
   <div class="container">
     <h1>¡Personalizados Boom!</h1>
-    <p class="subtitle">Elegí tu producto y armemos el precio</p>
+    <p class="subtitle">Elegí tu producto y armemos el precio al estilo cómic</p>
 
     <div class="tabs">
       <button class="tab-button active" data-tab="remeras">Remeras</button>
@@ -265,11 +217,11 @@
       <button class="tab-button" data-tab="otros">Otros</button>
     </div>
 
-    <!-- ================== REMERAS ================== -->
+    <!-- REMERAS -->
     <div id="remeras" class="tab-content active">
       <form id="form-remeras">
         <label>Cantidad:</label>
-        <input type="number" id="cant-remera" min="1" value="1" required>
+        <input type="number" id="cant-remera" min="1" value="10" required>
 
         <label>Modelo / Calidad:</label>
         <select id="modelo-remera">
@@ -280,13 +232,18 @@
 
         <label>Color de la remera:</label>
         <div class="color-preview">
-          <input type="color" id="color-remera" value="#ffffff">
-          <span id="color-swatch" style="background:#ffffff;"></span>
-          <select id="color-nombre">
-            <option>Blanco</option><option>Negro</option><option>Gris</option>
-            <option>Rojo</option><option>Azul</option><option>Verde</option>
-            <option>Otro (ver picker)</option>
+          <select id="color-nombre" onchange="updateColorSwatch()">
+            <option value="#ffffff">Blanco</option>
+            <option value="#000000">Negro</option>
+            <option value="#808080">Gris</option>
+            <option value="#ff0000">Rojo</option>
+            <option value="#0000ff">Azul</option>
+            <option value="#00ff00">Verde</option>
+            <option value="#ffff00">Amarillo</option>
+            <option value="#ff8800">Naranja</option>
+            <option value="#800080">Violeta</option>
           </select>
+          <span id="color-swatch" style="background:#ffffff;"></span>
         </div>
 
         <label>Talle:</label>
@@ -297,12 +254,12 @@
 
         <label>Tipo de estampado:</label>
         <select id="tipo-estampado">
-          <option value="sublimacion">Sublimación</option>
           <option value="vinilo">Vinilo termotransfer</option>
+          <option value="sublimacion">Sublimación</option>
         </select>
 
-        <label>Extras por unidad (Escudo // Nombre en el Dorso // Estampa en el brazo):</label>
-        <input type="number" id="extra-remera" min="0" value="0" placeholder="Ej: bordado, bolsillo...">
+        <label>Extras por unidad ($):</label>
+        <input type="number" id="extra-remera" min="0" value="0" step="1" placeholder="Ej: bordado, bolsillo, estampado adicional...">
 
         <label>Subí diseño o referencia (opcional):</label>
         <div class="upload-area" onclick="document.getElementById('upload-remera').click();">
@@ -316,142 +273,25 @@
       <div id="resultado-remeras" class="resultado"></div>
     </div>
 
-    <!-- ================== TAZAS (placeholder – expandir cuando quieras) ================== -->
+    <!-- Otras pestañas (placeholder) -->
     <div id="tazas" class="tab-content">
-      <p style="text-align:center; padding:40px 0; color:#777; font-size:1.2rem;">
-        Sección tazas en construcción...<br>¡Pronto con colores, diseños y más!
-      </p>
+      <p style="text-align:center; padding:60px 0; color:#777;">Sección tazas en construcción...</p>
     </div>
 
-    <!-- ================== PAPELERÍA y OTROS ================== -->
     <div id="papeleria" class="tab-content">
-      <p style="text-align:center; padding:40px 0; color:#777; font-size:1.2rem;">
-        Papelería en proceso...
-      </p>
+      <p style="text-align:center; padding:60px 0; color:#777;">Papelería en proceso...</p>
     </div>
 
     <div id="otros" class="tab-content">
-      <p style="text-align:center; padding:40px 0; color:#777; font-size:1.2rem;">
-        Agregá lo que quieras acá
-      </p>
+      <p style="text-align:center; padding:60px 0; color:#777;">Otros productos – pronto disponible</p>
     </div>
 
     <footer>
-     Stampycat estampado y sublimación • Marzo 2026<br>
-  </footer>
+      Tu emprendimiento de estampado y sublimación • Marzo 2026<br>
+      Precios referenciales – actualizá <code>precios.json</code> cuando cambien costos
+    </footer>
   </div>
 
   <script>
-    // ────────────────────────────────────────────────
     // Manejo de pestañas
-    // ────────────────────────────────────────────────
-    document.querySelectorAll('.tab-button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.tab).classList.add('active');
-      });
-    });
-
-    // ────────────────────────────────────────────────
-    // Vista previa de imagen subida
-    // ────────────────────────────────────────────────
-    function previewImage(event, previewId) {
-      const preview = document.getElementById(previewId);
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-          preview.src = e.target.result;
-          preview.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    // ────────────────────────────────────────────────
-    // Sincronizar color picker con swatch
-    // ────────────────────────────────────────────────
-    const colorInput = document.getElementById('color-remera');
-    const swatch = document.getElementById('color-swatch');
-    if (colorInput && swatch) {
-      colorInput.addEventListener('input', () => {
-        swatch.style.backgroundColor = colorInput.value;
-      });
-    }
-
-    // ────────────────────────────────────────────────
-    // Carga de precios desde precios.json (en la misma carpeta del repo)
-    // Ejemplo de precios.json:
-    /*
-    {
-      "remeras": {
-        "basica": 8500,
-        "premium": 12500,
-        "oversize": 14800
-      },
-      "estampados": {
-        "serigrafia1": 800,
-        "serigrafia2": 1500,
-        "dtf": 2800,
-        "sublimacion": 3200,
-        "vinilo": 1800
-      }
-    }
-    */
-    // ────────────────────────────────────────────────
-    let precios = {
-      remeras: { basica: 8500, premium: 12500, oversize: 14800 },
-      estampados: { serigrafia1: 800, serigrafia2: 1500, dtf: 2800, sublimacion: 3200, vinilo: 1800 }
-    };
-
-    async function cargarPrecios() {
-      try {
-        const res = await fetch('precios.json');
-        if (res.ok) {
-          precios = await res.json();
-          console.log('Precios cargados desde JSON');
-        }
-      } catch (err) {
-        console.warn('No se pudo cargar precios.json → usando valores por defecto', err);
-      }
-    }
-
-    // Intentar cargar al inicio
-    cargarPrecios();
-
-    // ────────────────────────────────────────────────
-    // Función de cálculo (solo remeras por ahora)
-    // ────────────────────────────────────────────────
-    function calcular(categoria) {
-      if (categoria !== 'remeras') {
-        alert('Sección en desarrollo – ¡pronto disponible!');
-        return;
-      }
-
-      const cantidad   = parseInt(document.getElementById('cant-remera').value) || 1;
-      const modelo     = document.getElementById('modelo-remera').value;
-      const estampKey  = document.getElementById('tipo-estampado').value;
-      const extra      = parseInt(document.getElementById('extra-remera').value) || 0;
-
-      const base       = precios.remeras?.[modelo]     || 10000;
-      const estampado  = precios.estampados?.[estampKey] || 1500;
-
-      const precioUnit = base + estampado + extra;
-      const total      = precioUnit * cantidad;
-
-      document.getElementById('resultado-remeras').innerHTML = `
-        <strong>¡KABOOM! Total estimado: $${total.toLocaleString('es-AR')}</strong><br>
-        <span class="precio-unit">Precio por unidad: $${precioUnit.toLocaleString('es-AR')}</span><br><br>
-        <small>(base $${base.toLocaleString('es-AR')} + estampado + extras • precio referencial)</small>
-      `;
-    }
-  </script>
-
-</body>
-</html>
-    <!-- Borra esta línea y pega el código completo que copiaste de Canva (el iframe) -->
-    
-</body>
-</html>
+    document.querySelectorAll('.tab-button').forEach
