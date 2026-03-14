@@ -425,36 +425,28 @@
     // Función de cálculo (solo remeras por ahora)
     // ────────────────────────────────────────────────
     function calcular(categoria) {
-  if (categoria !== 'remeras') {
-    alert('Sección en desarrollo – ¡pronto disponible!');
-    return;
-  }
+      if (categoria !== 'remeras') {
+        alert('Sección en desarrollo – ¡pronto disponible!');
+        return;
+      }
 
-  // Esperar a que los precios estén cargados (por si fetch es lento)
-  if (!precios.remeras) {
-    alert('Los precios aún no se cargaron. Intentá de nuevo en unos segundos.');
-    return;
-  }
+      const cantidad   = parseInt(document.getElementById('cant-remera').value) || 1;
+      const modelo     = document.getElementById('modelo-remera').value;
+      const estampKey  = document.getElementById('tipo-estampado').value;
+      const extra      = parseInt(document.getElementById('extra-remera').value) || 0;
 
-  const cantidad   = parseInt(document.getElementById('cant-remera').value) || 1;
-  const modelo     = document.getElementById('modelo-remera').value;
-  const estampKey  = document.getElementById('tipo-estampado').value;
-  
-  // Extra ahora viene del JSON (usamos el único valor que tenés)
-  const extraFijo  = precios.Extras?.Extra || 0;
+      const base       = precios.remeras?.[modelo]     || 10000;
+      const estampado  = precios.estampados?.[estampKey] || 1500;
 
-  const base       = precios.remeras?.[modelo]     || 10000;
-  const estampado  = precios.estampados?.[estampKey] || 1500;
+      const precioUnit = base + estampado + extra;
+      const total      = precioUnit * cantidad;
 
-  const precioUnit = base + estampado + extraFijo;
-  const total      = precioUnit * cantidad;
-
-  document.getElementById('resultado-remeras').innerHTML = `
-    <strong>¡KABOOM! Total estimado: $${total.toLocaleString('es-AR')}</strong><br>
-    <span class="precio-unit">Precio por unidad: $${precioUnit.toLocaleString('es-AR')}</span><br><br>
-    <small>(base $${base.toLocaleString('es-AR')} + estampado $${estampado.toLocaleString('es-AR')} + extra $${extraFijo.toLocaleString('es-AR')} • precio referencial)</small>
-  `;
-}
+      document.getElementById('resultado-remeras').innerHTML = `
+        <strong>¡KABOOM! Total estimado: $${total.toLocaleString('es-AR')}</strong><br>
+        <span class="precio-unit">Precio por unidad: $${precioUnit.toLocaleString('es-AR')}</span><br><br>
+        <small>(base $${base.toLocaleString('es-AR')} + estampado + extras • precio referencial)</small>
+      `;
+    }
   </script>
 
 </body>
