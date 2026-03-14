@@ -11,6 +11,9 @@
         "dtf": 2800,
         "sublimacion": 3200,
         "vinilo": 1800
+      },
+        "Extras": {
+        "Extra": 4000,
       }
     }
     */
