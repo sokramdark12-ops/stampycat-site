@@ -53,7 +53,7 @@
       text-align: center;
       color: var(--primary);
       font-family: 'Bangers', cursive;
-      font-size: 2rem;
+      font-size: 2.4rem;
       text-shadow: 
   4px 4px 6px color-mix(in srgb, var(--secondary) 20%, transparent),
   6px 6px 10px rgba(0,0,0, 0.06);
@@ -231,7 +231,7 @@
 
   <div class="container">
     <h1>¡Personalizados Boom!</h1>
-    <p class="subtitle">Elegí tu producto y armemos el precio al estilo cómic</p>
+    <p class="subtitle">Elegí tu producto y armemos el precio</p>
 
     <div class="tabs">
       <button class="tab-button active" data-tab="remeras">Remeras</button>
@@ -244,7 +244,7 @@
     <div id="remeras" class="tab-content active">
       <form id="form-remeras">
         <label>Cantidad:</label>
-        <input type="number" id="cant-remera" min="1" value="10" required>
+        <input type="number" id="cant-remera" min="1" value="1" required>
 
         <label>Modelo / Calidad:</label>
         <select id="modelo-remera">
@@ -272,14 +272,11 @@
 
         <label>Tipo de estampado:</label>
         <select id="tipo-estampado">
-          <option value="serigrafia1">Serigrafía 1 color</option>
-          <option value="serigrafia2">Serigrafía 2-3 colores</option>
-          <option value="dtf">DTF full color</option>
           <option value="sublimacion">Sublimación</option>
           <option value="vinilo">Vinilo termotransfer</option>
         </select>
 
-        <label>Extras por unidad ($):</label>
+        <label>Extras por unidad (Escudo // Nombre en el Dorso // Estampa en el brazo):</label>
         <input type="number" id="extra-remera" min="0" value="0" placeholder="Ej: bordado, bolsillo...">
 
         <label>Subí diseño o referencia (opcional):</label>
