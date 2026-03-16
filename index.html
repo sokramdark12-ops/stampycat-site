@@ -339,7 +339,7 @@
   // ==================== STATE ====================
   let cart = {}; // key: "catId|subName|productName" => { qty, extras: Set, catName, subName, productName, image }
   let activeCategoryId = null;
-  let prices = {};  // ← Cargaremos los precios desde JSON aquí
+  let prices = {};  // Cargaremos los precios desde JSON aquí
 
   // ==================== CONFIG ====================
   const defaultConfig = {
@@ -456,6 +456,10 @@
   // ==================== RENDER CATEGORIES ====================
   function renderCategories() {
     const grid = document.getElementById('category-grid');
+    if (!grid) {
+      console.error('No se encontró el elemento #category-grid');
+      return;
+    }
     grid.innerHTML = '';
     CATEGORIES.forEach(cat => {
       const btn = document.createElement('button');
@@ -713,7 +717,7 @@
       cartItems.appendChild(cartItem);
     });
 
-    // BLOQUE DEL TOTAL ESTIMADO (nuevo)
+    // BLOQUE DEL TOTAL ESTIMADO
     let totalBlock = document.getElementById('cart-total-block');
     const total = calculateTotal();
     const hasItems = totalItems > 0;
@@ -864,8 +868,10 @@
   });
 
   // ==================== INIT ====================
-  loadPrices().then(() => {
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM listo - inicializando categorías');
     renderCategories();
     lucide.createIcons();
+    loadPrices();  // Intentamos cargar precios, pero no bloquea el render
   });
 </script>
