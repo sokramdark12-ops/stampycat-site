@@ -9,6 +9,7 @@
   <script src="/_sdk/element_sdk.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
     html, body { height: 100%; margin: 0; }
     * { box-sizing: border-box; }
@@ -146,6 +147,7 @@
       border-radius: 2px;
     }
   </style>
+
   <style>body { box-sizing: border-box; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 </head>
@@ -154,10 +156,8 @@
   <div id="app-wrapper" class="comic-bg h-full w-full overflow-auto relative">
     <div class="comic-overlay"></div>
 
-    <!-- Toast container -->
     <div id="toast-container" class="fixed top-4 right-4 z-[100] flex flex-col gap-2"></div>
 
-    <!-- Header -->
     <header class="relative z-10 bg-white/95 shadow-lg border-b-4 border-pink-400">
       <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -179,28 +179,23 @@
       </div>
     </header>
 
-    <!-- Main content -->
     <main class="relative z-10 max-w-6xl mx-auto px-4 py-6">
       <section aria-label="Categorías de productos">
         <h2 class="font-heading text-xl md:text-2xl font-bold text-gray-700 mb-4 flex items-center gap-2">
           <span class="cat-paw">🐾</span> Elegí una categoría
         </h2>
-        <div id="category-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
-          <!-- Las categorías se insertan aquí con JavaScript -->
-        </div>
+        <div id="category-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6"></div>
       </section>
 
       <section id="products-section" class="hidden fade-in" aria-label="Productos">
         <div class="bg-white/95 rounded-2xl shadow-xl p-4 md:p-6 mb-6">
           <div class="flex items-center justify-between mb-4">
             <h2 id="category-title" class="font-heading text-xl md:text-2xl font-bold text-pink-600 flex items-center gap-2"></h2>
-            <button id="back-btn" class="flex items-center gap-1 text-sm text-purple-500 hover:text-purple-700 font-semibold transition-colors" aria-label="Volver a categorías">
+            <button id="back-btn" class="flex items-center gap-1 text-sm text-purple-500 hover:text-purple-700 font-semibold transition-colors">
               <i data-lucide="arrow-left" style="width:18px;height:18px;"></i> Volver
             </button>
           </div>
-          <div id="products-container">
-            <!-- Subcategorías y productos se insertan aquí -->
-          </div>
+          <div id="products-container"></div>
         </div>
       </section>
 
@@ -231,13 +226,11 @@
       </section>
     </main>
 
-    <!-- Floating cart button -->
     <button id="floating-cart-btn" class="floating-cart hidden bg-gradient-to-br from-pink-500 to-purple-600 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center" aria-label="Ver carrito">
       <i data-lucide="shopping-cart" style="width:28px;height:28px;"></i>
       <span id="floating-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center cart-badge">0</span>
     </button>
 
-    <!-- Footer -->
     <footer class="relative z-10 bg-white/90 border-t-2 border-pink-200 py-4 text-center">
       <p class="text-sm text-purple-400 font-medium">
         🐱 STAMPYCAT Argentina · 
@@ -246,9 +239,7 @@
     </footer>
   </div>
 
-  <!-- ================================================ -->
-  <!--               JAVASCRIPT - AL FINAL             -->
-  <!-- ================================================ -->
+  <!-- JAVASCRIPT -->
   <script>
     // ==================== DATA ====================
     const CATEGORIES = [
@@ -256,40 +247,34 @@
         subcategories: [
           { name: 'Tazas', products: ['Taza de polímero','Taza de cerámica','Taza de cerámica mágica','Taza mágica glitter','Vaso polímero tipo Starbucks'] },
           { name: 'Mates', products: ['Mate de polímero','Set matero (Yerbero, azucarero y mate)','Set completo con termo','Termo','Matelisto'] }
-        ]
-      },
+        ] },
       { id: 'botellas-jarros', name: 'Botellas y Jarros', icon: '🍶', gradient: 'from-blue-400 to-cyan-500',
         subcategories: [
           { name: 'Botellas', products: ['Botella hoppy','Botella Hoppy con aluminio','Termo estilo lata'] },
           { name: 'Jarros', products: ['Jarro chopp polímero','Jarra chopp cervecero','Jarro térmico con tapa','Jarro tipo Cantimplora'] }
-        ]
-      },
+        ] },
       { id: 'remeras', name: 'Remeras', icon: '👕', gradient: 'from-purple-400 to-violet-500',
         extras: [{ id: 'extra-estampado', label: 'Estampado adicional (espalda/manga/frente) — solo algodón', perProduct: true }],
         subcategories: [
           { name: 'Remeras Niños', products: ['Remera algodón','Remera poliéster','Remera ranglan'] },
           { name: 'Remeras Adultos', products: ['Remera algodón','Remera poliéster','Remera ranglan'] }
-        ]
-      },
+        ] },
       { id: 'buzos-camperas', name: 'Buzos y Camperas', icon: '🧥', gradient: 'from-emerald-400 to-teal-500',
         subcategories: [
           { name: 'Niños', products: ['Buzo canguro','Buzo cuello redondo'] },
           { name: 'Adultos', products: ['Buzo canguro','Buzo cuello redondo'] }
-        ]
-      },
+        ] },
       { id: 'escolar-futbol', name: 'Escolar y Fútbol', icon: '⚽', gradient: 'from-amber-400 to-orange-500',
         subcategories: [
           { name: 'Babys', products: ['Body bebé','Body bebé con caja sorpresa'] },
           { name: 'Escolar', products: ['Set de jardín','Funda carpeta N°3','Regla de madera','Bandas de jura','Señalador de libros'] },
           { name: 'Fútbol', products: ['Canilleras','Medias canilleras','Banderín'] }
-        ]
-      },
+        ] },
       { id: 'accesorios', name: 'Accesorios', icon: '🎁', gradient: 'from-pink-400 to-fuchsia-500',
         subcategories: [
           { name: 'Madera', products: ['Portaretratos "Feliz Día"','Portaretratos "Tú & Yo"','Portallaves pared','Portacelular','Destapador pared','Estuche cerveza regalo','Servilletero','Set parrillero con plato'] },
           { name: 'Otros', products: ['Gorras','Llavero destapador','Llaveros camiseta','Llaveros clásicos','Portavasos de tela','Individual de mesa de tela','Mousepad circular','Mousepad rectangular','Almohadas con relleno','Duo taza + almohadón'] }
-        ]
-      },
+        ] },
       { id: 'fechas-especiales', name: 'Fechas Especiales', icon: '🎉', gradient: 'from-red-400 to-pink-500',
         subcategories: [
           { name: 'Día del Padre', products: ['Taza personalizada','Set asado + chopp cervecero'] },
@@ -297,16 +282,14 @@
           { name: 'Semana de la Dulzura', products: ['Taza temática Dulzura y golosinas'] },
           { name: 'Egresaditos', products: ['Pack egresaditos','Gorras','Remera de egresados','Souvenir personalizado (a consultar)'] },
           { name: 'Día del Amigo', products: ['Taza temática día del amigo'] }
-        ]
-      },
+        ] },
       { id: 'papeleria', name: 'Papelería Creativa', icon: '✨', gradient: 'from-violet-400 to-purple-600',
         extras: [{ id: 'extra-imantado', label: 'Producto imantado', perProduct: true }],
         subcategories: [
           { name: 'Stickers', products: ['Stickers clásicos','Stickers emprendimiento','Stickers holográficos','Stickers holográficos transparentes','Stickers sublimados en vinilo'] },
           { name: 'Fotos Polaroid', products: ['Fotos polaroid x5','Fotos polaroid x10','Fotos polaroid x15','Tira Fotocabina de 3 x5','Tira Fotocabina de 3 x10','Tira Fotocabina de 3 x15'] },
           { name: 'Cumpleañitos', products: ['Caketopper clásico','Caketopper 3D','Banderín personalizado','Invitación digital para eventos','Invitación tarjeta física para eventos'] }
-        ]
-      }
+        ] }
     ];
 
     // ==================== STATE ====================
@@ -338,12 +321,12 @@
       const fontFamily = config.font_family || "'Baloo 2', cursive";
       const fontSize = config.font_size || 16;
 
-      document.getElementById('brand-title').textContent = title;
-      document.getElementById('brand-subtitle').textContent = subtitle;
-      document.getElementById('whatsapp-btn-text').textContent = btnText;
+      if (document.getElementById('brand-title')) document.getElementById('brand-title').textContent = title;
+      if (document.getElementById('brand-subtitle')) document.getElementById('brand-subtitle').textContent = subtitle;
+      if (document.getElementById('whatsapp-btn-text')) document.getElementById('whatsapp-btn-text').textContent = btnText;
 
       const wrapper = document.getElementById('app-wrapper');
-      wrapper.style.backgroundColor = bgColor;
+      if (wrapper) wrapper.style.backgroundColor = bgColor;
 
       document.querySelectorAll('.bg-white\\/95, .bg-white\\/90').forEach(el => {
         el.style.backgroundColor = surfColor + 'f2';
@@ -366,7 +349,7 @@
     }
 
     // ==================== ELEMENT SDK ====================
-    if (window.elementSdk) {
+    if (window.elementSdk && window.elementSdk.init) {
       window.elementSdk.init({
         defaultConfig,
         onConfigChange: async (config) => { applyConfig(config); },
@@ -380,11 +363,11 @@
           ],
           borderables: [],
           fontEditable: {
-            get: () => config.font_family || "'Baloo 2'",
+            get: () => config.font_family || defaultConfig.font_family || "'Baloo 2'",
             set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
           },
           fontSizeable: {
-            get: () => config.font_size || 16,
+            get: () => config.font_size || defaultConfig.font_size || 16,
             set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
           }
         }),
@@ -402,10 +385,10 @@
         const response = await fetch('./precios.json');
         if (!response.ok) throw new Error('No se pudo cargar precios.json');
         prices = await response.json();
-        console.log('Precios cargados OK');
+        console.log('Precios cargados correctamente');
       } catch (err) {
-        console.warn('No se cargaron precios:', err.message);
-        showToast('⚠️ No se encontraron precios (usa $0 por ahora)');
+        console.warn('No se pudieron cargar los precios:', err.message);
+        showToast('⚠️ No se cargó precios.json (precios en $0)');
       }
     }
 
@@ -428,7 +411,7 @@
     function renderCategories() {
       const grid = document.getElementById('category-grid');
       if (!grid) {
-        console.error('No se encontró #category-grid');
+        console.error('No se encontró el elemento #category-grid');
         return;
       }
       grid.innerHTML = '';
@@ -443,19 +426,397 @@
         btn.addEventListener('click', () => selectCategory(cat.id));
         grid.appendChild(btn);
       });
+      lucide.createIcons();
     }
 
-    // ... (todas las demás funciones siguen iguales: selectCategory, updateQty, toggleExtra, etc.)
+    // ==================== SELECT CATEGORY ====================
+    function selectCategory(catId) {
+      activeCategoryId = catId;
+      const cat = CATEGORIES.find(c => c.id === catId);
+      if (!cat) {
+        console.warn('Categoría no encontrada:', catId);
+        return;
+      }
 
-    // Para no hacer el mensaje eterno, copio solo las partes clave del init.
-    // El resto del código (selectCategory, updateQty, toggleExtra, handleImageUpload, removeImage, updateCartUI, removeFromCart, sendWhatsApp, showToast, event listeners) debe permanecer exactamente igual al que tenías.
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.catId === catId);
+      });
 
-    // ==================== INICIALIZACIÓN ====================
+      const section = document.getElementById('products-section');
+      if (section) section.classList.remove('hidden');
+
+      const titleEl = document.getElementById('category-title');
+      if (titleEl) titleEl.innerHTML = `${cat.icon} ${cat.name}`;
+
+      const container = document.getElementById('products-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (cat.extras && cat.extras.length > 0) {
+        const extrasDiv = document.createElement('div');
+        extrasDiv.className = 'bg-yellow-50 border-2 border-yellow-200 rounded-xl p-3 mb-4 slide-down';
+        extrasDiv.innerHTML = `
+          <p class="font-heading font-bold text-yellow-700 text-sm flex items-center gap-2 mb-1">
+            <i data-lucide="info" style="width:16px;height:16px;"></i> Extras disponibles
+          </p>
+          <p class="text-yellow-600 text-xs">${cat.extras.map(e => e.label).join(' · ')}</p>
+        `;
+        container.appendChild(extrasDiv);
+      }
+
+      cat.subcategories.forEach((sub, index) => {
+        const subDiv = document.createElement('div');
+        subDiv.className = 'mb-5 slide-down';
+        subDiv.style.animationDelay = `${index * 0.08}s`;
+
+        const subHeader = document.createElement('h3');
+        subHeader.className = 'subcategory-header font-heading font-bold text-purple-600 text-lg mb-3 pb-1';
+        subHeader.textContent = sub.name;
+        subDiv.appendChild(subHeader);
+
+        const prodGrid = document.createElement('div');
+        prodGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2';
+
+        sub.products.forEach(prod => {
+          const key = `${catId}|${sub.name}|${prod}`;
+          const qty = cart[key]?.qty || 0;
+          const extras = cart[key]?.extras || new Set();
+          const image = cart[key]?.image || null;
+
+          const card = document.createElement('div');
+          card.className = 'product-card bg-white rounded-xl p-3 flex flex-col gap-2';
+          card.dataset.key = key;
+
+          let extrasHTML = '';
+          if (cat.extras) {
+            cat.extras.forEach(ex => {
+              const checked = extras.has(ex.id) ? 'checked' : '';
+              extrasHTML += `
+                <label class="flex items-center gap-1 cursor-pointer">
+                  <input type="checkbox" class="extras-check w-4 h-4 rounded" data-extra-id="${ex.id}" data-key="${key}" ${checked}>
+                  <span class="text-xs text-gray-500">${ex.label}</span>
+                </label>
+              `;
+            });
+          }
+
+          let imageHTML = '';
+          if (image) {
+            imageHTML = `
+              <div class="relative w-full h-20 bg-gray-100 rounded-lg overflow-hidden mb-1">
+                <img src="${image}" alt="Referencia" class="w-full h-full object-cover" loading="lazy">
+                <button class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-600 text-xs font-bold" data-remove-image="${key}">×</button>
+              </div>
+            `;
+          }
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-gray-700 text-sm truncate">${prod}</p>
+                ${extrasHTML}
+              </div>
+              <div class="flex items-center gap-1 shrink-0">
+                <button class="qty-btn w-8 h-8 rounded-full bg-pink-100 text-pink-600 font-bold flex items-center justify-center hover:bg-pink-200 text-sm" data-action="dec" data-key="${key}">−</button>
+                <span class="w-8 text-center font-heading font-bold text-gray-700 text-sm" data-qty-display="${key}">${qty}</span>
+                <button class="qty-btn w-8 h-8 rounded-full bg-pink-500 text-white font-bold flex items-center justify-center hover:bg-pink-600 text-sm" data-action="inc" data-key="${key}" data-cat-id="${catId}" data-sub-name="${sub.name}" data-prod-name="${prod}">+</button>
+              </div>
+            </div>
+            ${imageHTML}
+            <label class="flex items-center justify-center gap-1 w-full px-2 py-1.5 bg-purple-50 hover:bg-purple-100 rounded-lg cursor-pointer transition-colors border border-purple-200 text-xs font-medium text-purple-600">
+              <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
+              <span class="hidden sm:inline">Agregar referencia</span>
+              <span class="sm:hidden">Foto</span>
+              <input type="file" class="image-input hidden" accept="image/*" data-key="${key}">
+            </label>
+          `;
+
+          prodGrid.appendChild(card);
+        });
+
+        subDiv.appendChild(prodGrid);
+        container.appendChild(subDiv);
+      });
+
+      lucide.createIcons();
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ==================== CART LOGIC ====================
+    function updateQty(key, delta, catId, subName, prodName) {
+      if (!cart[key]) {
+        if (delta < 0) return;
+        cart[key] = { qty: 0, extras: new Set(), image: null, catName: CATEGORIES.find(c => c.id === catId)?.name || '', subName, productName: prodName };
+      }
+      cart[key].qty = Math.max(0, cart[key].qty + delta);
+      if (cart[key].qty === 0) delete cart[key];
+
+      document.querySelectorAll(`[data-qty-display="${key}"]`).forEach(d => {
+        d.textContent = cart[key]?.qty || 0;
+      });
+
+      if (delta > 0) showToast(`✅ ${prodName} agregado`);
+      updateCartUI();
+    }
+
+    function toggleExtra(key, extraId) {
+      if (!cart[key]) return;
+      if (cart[key].extras.has(extraId)) {
+        cart[key].extras.delete(extraId);
+      } else {
+        cart[key].extras.add(extraId);
+      }
+      updateCartUI();
+    }
+
+    function handleImageUpload(key, file) {
+      if (!file || !file.type.startsWith('image/')) {
+        showToast('❌ Solo imágenes');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('❌ Imagen muy grande (máx 5MB)');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (!cart[key]) {
+          const [catId, subName, prodName] = key.split('|');
+          cart[key] = { qty: 1, extras: new Set(), image: null, catName: CATEGORIES.find(c => c.id === catId)?.name || '', subName, productName: prodName };
+          document.querySelectorAll(`[data-qty-display="${key}"]`).forEach(d => d.textContent = '1');
+        }
+        cart[key].image = e.target.result;
+        showToast('📸 Imagen agregada');
+        selectCategory(activeCategoryId);
+        updateCartUI();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeImage(key) {
+      if (cart[key]) {
+        cart[key].image = null;
+        showToast('🗑️ Imagen eliminada');
+        selectCategory(activeCategoryId);
+        updateCartUI();
+      }
+    }
+
+    function updateCartUI() {
+      const totalItems = Object.values(cart).reduce((sum, i) => sum + i.qty, 0);
+      const cartSection = document.getElementById('cart-section');
+      const floatingBtn = document.getElementById('floating-cart-btn');
+      const badge = document.getElementById('floating-badge');
+      const cartItems = document.getElementById('cart-items');
+      const cartEmpty = document.getElementById('cart-empty');
+      const cartFooter = document.getElementById('cart-footer');
+      const totalQtyEl = document.getElementById('cart-total-qty');
+
+      if (totalItems > 0) {
+        cartSection?.classList.remove('hidden');
+        floatingBtn?.classList.remove('hidden');
+        floatingBtn?.classList.add('flex');
+        if (badge) badge.textContent = totalItems;
+        cartEmpty?.classList.add('hidden');
+        cartFooter?.classList.remove('hidden');
+        if (totalQtyEl) totalQtyEl.textContent = totalItems + (totalItems === 1 ? ' producto' : ' productos');
+      } else {
+        cartSection?.classList.add('hidden');
+        floatingBtn?.classList.add('hidden');
+        floatingBtn?.classList.remove('flex');
+        cartEmpty?.classList.remove('hidden');
+        cartFooter?.classList.add('hidden');
+      }
+
+      if (cartItems) cartItems.innerHTML = '';
+      Object.entries(cart).forEach(([key, item]) => {
+        if (item.qty <= 0) return;
+
+        const cat = CATEGORIES.find(c => c.id === key.split('|')[0]);
+        let extrasText = '';
+        if (item.extras.size > 0 && cat?.extras) {
+          const names = cat.extras.filter(e => item.extras.has(e.id)).map(e => e.label);
+          if (names.length) extrasText = `<span class="text-xs text-purple-400 block mt-0.5">+ ${names.join(', ')}</span>`;
+        }
+
+        let imagePreview = '';
+        if (item.image) {
+          imagePreview = `
+            <div class="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border border-purple-200">
+              <img src="${item.image}" alt="Referencia" class="w-full h-full object-cover">
+            </div>
+          `;
+        }
+
+        const cartItem = document.createElement('div');
+        cartItem.className = 'flex items-center justify-between bg-pink-50 rounded-xl p-3 gap-2';
+        cartItem.innerHTML = `
+          <div class="flex items-center gap-2 flex-1 min-w-0">
+            ${imagePreview}
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-gray-700 text-sm truncate">${item.productName}</p>
+              <p class="text-xs text-gray-400">${item.catName} › ${item.subName}</p>
+              ${extrasText}
+              ${item.image ? '<p class="text-xs text-purple-500 mt-0.5">📸 Con referencia</p>' : ''}
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="font-heading font-bold text-pink-600 text-lg">×${item.qty}</span>
+            <button class="w-7 h-7 rounded-full bg-red-100 text-red-500 flex items-center justify-center hover:bg-red-200 transition-colors" data-remove-key="${key}">
+              <i data-lucide="x" style="width:14px;height:14px;"></i>
+            </button>
+          </div>
+        `;
+        cartItems?.appendChild(cartItem);
+      });
+
+      // Total estimado
+      let totalBlock = document.getElementById('cart-total-block');
+      const total = calculateTotal();
+      if (totalItems > 0) {
+        if (!totalBlock) {
+          totalBlock = document.createElement('div');
+          totalBlock.id = 'cart-total-block';
+          totalBlock.className = 'mt-6 pt-4 border-t-2 border-dashed border-pink-300 text-center';
+          totalBlock.innerHTML = `
+            <p class="font-heading text-lg font-bold text-gray-700 mb-2">Total estimado</p>
+            <p id="cart-total-price" class="font-heading text-3xl font-extrabold text-pink-600 drop-shadow-sm">$${total.toLocaleString('es-AR')}</p>
+            <p class="text-xs text-purple-500 mt-1">* Precio referencial – consultar por WhatsApp</p>
+          `;
+          const btn = document.getElementById('whatsapp-btn');
+          if (btn && btn.parentElement) {
+            btn.parentElement.insertBefore(totalBlock, btn);
+          } else if (cartFooter) {
+            cartFooter.appendChild(totalBlock);
+          }
+        } else {
+          const priceEl = document.getElementById('cart-total-price');
+          if (priceEl) priceEl.textContent = `$${total.toLocaleString('es-AR')}`;
+        }
+      } else if (totalBlock) {
+        totalBlock.remove();
+      }
+
+      lucide.createIcons();
+    }
+
+    function removeFromCart(key) {
+      const name = cart[key]?.productName || 'Producto';
+      delete cart[key];
+      document.querySelectorAll(`[data-qty-display="${key}"]`).forEach(d => d.textContent = '0');
+      showToast(`🗑️ ${name} eliminado`);
+      updateCartUI();
+    }
+
+    // ==================== WHATSAPP ====================
+    function sendWhatsApp() {
+      const items = Object.entries(cart).filter(([,i]) => i.qty > 0);
+      if (items.length === 0) return;
+
+      let message = '🐱 *STAMPYCAT - Solicitud de Presupuesto*\n\nHola! Me gustaría consultar por:\n\n';
+      items.forEach(([key, item]) => {
+        const cat = CATEGORIES.find(c => c.id === key.split('|')[0]);
+        let extras = '';
+        if (item.extras.size > 0 && cat?.extras) {
+          const names = cat.extras.filter(e => item.extras.has(e.id)).map(e => e.label);
+          if (names.length) extras = ` _(${names.join(', ')})_`;
+        }
+        const imageNote = item.image ? ' 📸 _[con referencia adjunta]_' : '';
+        message += `• *${item.productName}* × ${item.qty}${extras}${imageNote}\n  _${item.catName} › ${item.subName}_\n\n`;
+      });
+
+      const total = calculateTotal();
+      if (total > 0) message += `*Total estimado*: $${total.toLocaleString('es-AR')}\n\n`;
+      message += '¡Gracias! 😊';
+
+      const phone = '5491173617819';
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+
+    // ==================== TOAST ====================
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast-msg bg-gray-800 text-white px-4 py-2 rounded-xl shadow-lg text-sm font-medium';
+      toast.textContent = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    document.addEventListener('click', e => {
+      const qtyBtn = e.target.closest('[data-action]');
+      if (qtyBtn) {
+        const action = qtyBtn.dataset.action;
+        const key = qtyBtn.dataset.key;
+        const delta = action === 'inc' ? 1 : -1;
+        const catId = qtyBtn.dataset.catId || key.split('|')[0];
+        const subName = qtyBtn.dataset.subName || key.split('|')[1];
+        const prodName = qtyBtn.dataset.prodName || key.split('|')[2];
+        updateQty(key, delta, catId, subName, prodName);
+        return;
+      }
+
+      const removeBtn = e.target.closest('[data-remove-key]');
+      if (removeBtn) {
+        removeFromCart(removeBtn.dataset.removeKey);
+        return;
+      }
+
+      const removeImageBtn = e.target.closest('[data-remove-image]');
+      if (removeImageBtn) {
+        e.preventDefault();
+        removeImage(removeImageBtn.dataset.removeImage);
+        return;
+      }
+
+      if (e.target.closest('#back-btn')) {
+        document.getElementById('products-section')?.classList.add('hidden');
+        activeCategoryId = null;
+        document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+        return;
+      }
+
+      if (e.target.closest('#whatsapp-btn')) {
+        sendWhatsApp();
+        return;
+      }
+
+      if (e.target.closest('#floating-cart-btn')) {
+        document.getElementById('cart-section')?.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    });
+
+    document.addEventListener('change', e => {
+      if (e.target.classList.contains('extras-check')) {
+        const key = e.target.dataset.key;
+        const extraId = e.target.dataset.extraId;
+        if (!cart[key]) {
+          const [catId, subName, prodName] = key.split('|');
+          cart[key] = { qty: 1, extras: new Set(), image: null, catName: CATEGORIES.find(c => c.id === catId)?.name || '', subName, productName: prodName };
+          document.querySelectorAll(`[data-qty-display="${key}"]`).forEach(d => d.textContent = '1');
+        }
+        toggleExtra(key, extraId);
+      }
+
+      if (e.target.classList.contains('image-input')) {
+        const key = e.target.dataset.key;
+        const file = e.target.files[0];
+        handleImageUpload(key, file);
+        e.target.value = '';
+      }
+    });
+
+    // ==================== INICIO ====================
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('Página cargada → pintando categorías');
+      console.log('Página lista → mostrando categorías');
       renderCategories();
       lucide.createIcons();
-      loadPrices();  // no bloquea la vista
+      loadPrices();
     });
   </script>
 </body>
