@@ -1,12 +1,142 @@
 {
+  "tazas-mates": {
+    "Tazas": {
+      "Taza de polímero": 4500,
+      "Taza de cerámica": 5200,
+      "Taza de cerámica mágica": 6800,
+      "Taza mágica glitter": 7500,
+      "Vaso polímero tipo Starbucks": 6200
+    },
+    "Mates": {
+      "Mate de polímero": 5800,
+      "Set matero (Yerbero, azucarero y mate)": 14800,
+      "Set completo con termo": 28500,
+      "Termo": 9800,
+      "Matelisto": 7200
+    }
+  },
+  "botellas-jarros": {
+    "Botellas": {
+      "Botella hoppy": 9500,
+      "Botella Hoppy con aluminio": 11800,
+      "Termo estilo lata": 13500
+    },
+    "Jarros": {
+      "Jarro chopp polímero": 7800,
+      "Jarra chopp cervecero": 9200,
+      "Jarro térmico con tapa": 14500,
+      "Jarro tipo Cantimplora": 11200
+    }
+  },
   "remeras": {
-    "basica": 9500,
-    "premium": 12500,
-    "oversize": 14800
+    "Remeras Niños": {
+      "Remera algodón": 8500,
+      "Remera poliéster": 7800,
+      "Remera ranglan": 9200
+    },
+    "Remeras Adultos": {
+      "Remera algodón": 10500,
+      "Remera poliéster": 9800,
+      "Remera ranglan": 11800
+    }
   },
-  "estampados": {
-    "vinilo": 1800,
-    "sublimacion": 3200
+  "buzos-camperas": {
+    "Niños": {
+      "Buzo canguro": 16500,
+      "Buzo cuello redondo": 15800
+    },
+    "Adultos": {
+      "Buzo canguro": 22000,
+      "Buzo cuello redondo": 21500
+    }
   },
-  "extra_por_unidad": 4000
+  "escolar-futbol": {
+    "Babys": {
+      "Body bebé": 6800,
+      "Body bebé con caja sorpresa": 9200
+    },
+    "Escolar": {
+      "Set de jardín": 4500,
+      "Funda carpeta N°3": 3800,
+      "Regla de madera": 2500,
+      "Bandas de jura": 1800,
+      "Señalador de libros": 1200
+    },
+    "Fútbol": {
+      "Canilleras": 6200,
+      "Medias canilleras": 2800,
+      "Banderín": 4500
+    }
+  },
+  "accesorios": {
+    "Madera": {
+      "Portaretratos \"Feliz Día\"": 4800,
+      "Portaretratos \"Tú & Yo\"": 5200,
+      "Portallaves pared": 6500,
+      "Portacelular": 4200,
+      "Destapador pared": 3800,
+      "Estuche cerveza regalo": 7500,
+      "Servilletero": 3200,
+      "Set parrillero con plato": 9800
+    },
+    "Otros": {
+      "Gorras": 9500,
+      "Llavero destapador": 1800,
+      "Llaveros camiseta": 1500,
+      "Llaveros clásicos": 1200,
+      "Portavasos de tela": 2200,
+      "Individual de mesa de tela": 2800,
+      "Mousepad circular": 4500,
+      "Mousepad rectangular": 4800,
+      "Almohadas con relleno": 12500,
+      "Duo taza + almohadón": 18500
+    }
+  },
+  "fechas-especiales": {
+    "Día del Padre": {
+      "Taza personalizada": 5200,
+      "Set asado + chopp cervecero": 19800
+    },
+    "Día de la Bandera": {
+      "Banda para Jura": 2800,
+      "Pin": 1800,
+      "Certificado de Jura a la bandera": 2200
+    },
+    "Semana de la Dulzura": {
+      "Taza temática Dulzura y golosinas": 6200
+    },
+    "Egresaditos": {
+      "Pack egresaditos": 14500,
+      "Gorras": 9800,
+      "Remera de egresados": 11800,
+      "Souvenir personalizado (a consultar)": 0
+    },
+    "Día del Amigo": {
+      "Taza temática día del amigo": 5800
+    }
+  },
+  "papeleria": {
+    "Stickers": {
+      "Stickers clásicos": 800,
+      "Stickers emprendimiento": 1200,
+      "Stickers holográficos": 1800,
+      "Stickers holográficos transparentes": 2200,
+      "Stickers sublimados en vinilo": 2500
+    },
+    "Fotos Polaroid": {
+      "Fotos polaroid x5": 4500,
+      "Fotos polaroid x10": 8200,
+      "Fotos polaroid x15": 11800,
+      "Tira Fotocabina de 3 x5": 6800,
+      "Tira Fotocabina de 3 x10": 12500,
+      "Tira Fotocabina de 3 x15": 17800
+    },
+    "Cumpleañitos": {
+      "Caketopper clásico": 3800,
+      "Caketopper 3D": 6200,
+      "Banderín personalizado": 4800,
+      "Invitación digital para eventos": 1500,
+      "Invitación tarjeta física para eventos": 3200
+    }
+  }
 }
