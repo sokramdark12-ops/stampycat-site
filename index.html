@@ -1,393 +1,871 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Stampycat - Calculadora Precios</title>
-
-  <!-- Google Fonts (opcional) -->
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STAMPYCAT - Calculadora de Precios</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&amp;family=Quicksand:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <style>
-    :root {
-      /* COLORES – CAMBIA ACÁ */
-      --primary: #6200ea;       
-      --primary-dark: #3700b3;  
-      --secondary: #304ffe;     
-      --bg-light: #f3e5f5;      
-      --text-dark: #1a0033;     
-      --text-muted: #4a148c;    
-      --success: #00c853;       
-      --white: #ffffff;
-      --shadow: rgba(100, 50, 200, 0.12);   /* más suave */
+    html, body { height: 100%; margin: 0; }
+    * { box-sizing: border-box; }
+
+    .font-heading { font-family: 'Baloo 2', cursive; }
+    .font-body { font-family: 'Quicksand', sans-serif; }
+
+    /* Comic dot background */
+    .comic-bg {
+      background-color: #fef9f0;
+      background-image:
+        radial-gradient(circle, #f0c6d8 1px, transparent 1px),
+        radial-gradient(circle, #c4a8e0 0.8px, transparent 0.8px);
+      background-size: 28px 28px, 42px 42px;
+      background-position: 0 0, 14px 14px;
     }
 
-    body {
-      font-family: 'Roboto', Arial, sans-serif;
-      background: var(--bg-light);
-      color: var(--text-dark);
-      margin: 0;
-      padding: 15px;
-      line-height: 1.55;
+    /* Halftone overlay */
+    .comic-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 1px);
+      background-size: 4px 4px;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    h1 {
-      text-align: center;
-      color: var(--primary);
-      font-family: 'Bangers', cursive;
-      font-size: 3.2rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.15);   /* sombra más suave y transparente */
-      margin: 20px 0 8px;
+    .cat-paw {
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+    .cat-paw:hover { transform: scale(1.2) rotate(-10deg); }
+
+    .category-btn {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 3px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .category-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .category-btn:hover::before { left: 100%; }
+    .category-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .category-btn.active {
+      border-color: #e84393;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(232,67,147,0.3);
     }
 
-    .subtitle {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 1.2rem;
-      margin-bottom: 25px;
+    .product-card {
+      transition: all 0.2s ease;
+      border: 2px solid #f0e6f6;
+    }
+    .product-card:hover {
+      border-color: #d63384;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(214,51,132,0.15);
     }
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      background: var(--white);
-      padding: 28px;
-      border-radius: 18px;
-      box-shadow: 0 10px 30px var(--shadow);
-      border: 3px solid var(--secondary);
+    .qty-btn {
+      transition: all 0.15s ease;
+    }
+    .qty-btn:hover {
+      transform: scale(1.1);
+    }
+    .qty-btn:active {
+      transform: scale(0.95);
     }
 
-    .tabs {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 30px;
+    .cart-badge {
+      animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0); }
+      100% { transform: scale(1); }
     }
 
-    .tab-button {
-      padding: 14px 30px;
-      background: #e1bee7;
-      border: 3px solid var(--primary);
-      border-radius: 999px;
-      cursor: pointer;
-      font-weight: 700;
-      color: var(--text-dark);
+    .slide-down {
+      animation: slideDown 0.35s ease-out;
+    }
+    @keyframes slideDown {
+      0% { opacity: 0; transform: translateY(-15px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .whatsapp-btn {
+      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
       transition: all 0.3s ease;
-      font-size: 1.1rem;
+      box-shadow: 0 4px 15px rgba(37,211,102,0.4);
+    }
+    .whatsapp-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(37,211,102,0.5);
     }
 
-    .tab-button.active,
-    .tab-button:hover {
-      background: var(--primary);
-      color: white;
-      transform: scale(1.06);
-      box-shadow: 0 4px 12px var(--shadow);
+    .cart-panel {
+      backdrop-filter: blur(10px);
     }
 
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-
-    form {
-      display: grid;
-      gap: 20px;
-      max-width: 640px;
-      margin: 0 auto;
-    }
-
-    label {
-      font-weight: 700;
-      color: var(--primary);
-      font-size: 1.05rem;
-    }
-
-    input, select {
-      padding: 13px 16px;
-      border: 2px solid #d1c4e9;
-      border-radius: 10px;
-      font-size: 1.05rem;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .color-preview {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .color-preview span {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 3px solid #eee;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.12);
-    }
-
-    .upload-area {
-      border: 3px dashed var(--primary);
-      border-radius: 14px;
-      padding: 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.25s;
-      background: #fafafa;
-    }
-
-    .upload-area:hover {
-      border-color: var(--secondary);
-      background: #f0e8ff;
-    }
-
-    #preview-remera {
-      max-width: 100%;
-      max-height: 300px;
-      margin: 18px auto 0;
-      display: none;
+    .stamp-border {
+      border: 3px dashed #e84393;
       border-radius: 12px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
     }
 
-    button {
-      background: var(--success);
-      color: white;
-      border: none;
-      padding: 16px 0;
-      font-size: 1.25rem;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s;
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #fef9f0; }
+    ::-webkit-scrollbar-thumb { background: #d4a5c9; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #c084b6; }
+
+    .extras-check {
+      accent-color: #e84393;
     }
 
-    button:hover {
-      background: #00b140;
+    .floating-cart {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 50;
+      transition: all 0.3s ease;
+    }
+    .floating-cart:hover {
+      transform: scale(1.05);
     }
 
-    .resultado {
-      margin-top: 30px;
-      padding: 24px;
-      background: #e0f2f1;
-      border: 4px dashed var(--secondary);
-      border-radius: 16px;
-      text-align: center;
-      font-size: 1.45rem;
-      font-weight: bold;
-      color: #004d40;
+    .toast-msg {
+      animation: toastIn 0.4s ease-out, toastOut 0.3s ease-in 2s forwards;
+    }
+    @keyframes toastIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes toastOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-10px); }
     }
 
-    .precio-unit {
-      font-size: 1.15rem;
-      color: #333;
-      margin-top: 12px;
+    .subcategory-header {
+      position: relative;
     }
-
-    footer {
-      text-align: center;
-      margin-top: 50px;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    @media (max-width: 640px) {
-      h1 { font-size: 2.6rem; }
-      .container { padding: 20px; }
-      .tabs { flex-direction: column; gap: 10px; }
-      .tab-button { width: 100%; padding: 14px; }
-      form { gap: 18px; }
-      input, select, button { font-size: 1.1rem; }
+    .subcategory-header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: linear-gradient(90deg, #e84393, #a855f7);
+      border-radius: 2px;
     }
   </style>
-</head>
-<!-- ... todo el <head> y estilos iguales ... -->
-
-<body>
-
-  <div class="container">
-    <h1>¡Stampycat Sublimación y Estampados!</h1>
-    <p class="subtitle">Elegí tu producto y armemos el precio</p>
-
-    <div class="tabs">
-      <button class="tab-button active" data-tab="remeras">Remeras</button>
-      <button class="tab-button" data-tab="tazas">Tazas</button>
-      <button class="tab-button" data-tab="papeleria">Papelería</button>
-      <button class="tab-button" data-tab="otros">Otros</button>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body">
+  <div id="app-wrapper" class="comic-bg h-full w-full overflow-auto relative">
+   <div class="comic-overlay"></div><!-- Toast container -->
+   <div id="toast-container" class="fixed top-4 right-4 z-[100] flex flex-col gap-2"></div><!-- Header -->
+   <header class="relative z-10 bg-white/95 shadow-lg border-b-4 border-pink-400">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center text-white text-2xl font-heading font-bold shadow-md">
+       🐱
+      </div>
+      <div>
+       <h1 id="brand-title" class="font-heading text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500 bg-clip-text text-transparent leading-tight">STAMPYCAT</h1>
+       <p id="brand-subtitle" class="text-xs md:text-sm text-purple-400 font-medium tracking-wide">Sublimación • Estampados • Papelería Creativa</p>
+      </div>
+     </div>
+     <div class="flex items-center gap-3">
+      <a href="https://instagram.com/stampycatargentina" target="_blank" rel="noopener noreferrer" class="text-pink-400 hover:text-pink-600 transition-colors" aria-label="Instagram STAMPYCAT">
+       <svg width="28" height="28" viewbox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+       </svg></a>
+     </div>
     </div>
-
-    <!-- REMERAS -->
-    <div id="remeras" class="tab-content active">
-      <!-- formulario igual que antes -->
-      <form id="form-remeras">
-        <label>Cantidad:</label>
-        <input type="number" id="cant-remera" min="1" value="1" required>
-
-        <label>Modelo / Calidad:</label>
-        <select id="modelo-remera">
-          <option value="basica">Básica lisa</option>
-          <option value="premium">Premium algodón peinado</option>
-          <option value="oversize">Oversize</option>
-        </select>
-
-        <label>Color de la remera:</label>
-        <div class="color-preview">
-          <select id="color-nombre" onchange="updateColorSwatch()">
-            <option value="#ffffff">Blanco</option>
-            <option value="#000000">Negro</option>
-            <option value="#808080">Gris</option>
-            <option value="#ff0000">Rojo</option>
-            <option value="#0000ff">Azul</option>
-            <option value="#00ff00">Verde</option>
-            <option value="#ffff00">Amarillo</option>
-            <option value="#ff8800">Naranja</option>
-            <option value="#800080">Violeta</option>
-          </select>
-          <span id="color-swatch" style="background:#ffffff;"></span>
-        </div>
-
-        <label>Talle:</label>
-        <select id="talle-remera">
-          <option>XS</option><option>S</option><option>M</option>
-          <option>L</option><option>XL</option><option>XXL</option><option>3XL</option>
-        </select>
-
-        <label>Tipo de estampado:</label>
-        <select id="tipo-estampado">
-          <option value="vinilo">Vinilo termotransfer</option>
-          <option value="sublimacion">Sublimación</option>
-        </select>
-
-        <label>Extras por unidad ($):</label>
-        <input type="number" id="extra-remera" min="0" value="0" step="1" placeholder="Ej: bordado, bolsillo, estampado adicional...">
-
-        <label>Subí diseño o referencia (opcional):</label>
-        <div class="upload-area" onclick="document.getElementById('upload-remera').click();">
-          <p>Hacé click o arrastrá la imagen aquí</p>
-          <input type="file" id="upload-remera" accept="image/*" style="display:none;" onchange="previewImage(event, 'preview-remera')">
-        </div>
-        <img id="preview-remera" alt="Vista previa del diseño">
-
-        <button type="button" onclick="calcular('remeras')">¡Calcular Precio!</button>
-      </form>
-      <div id="resultado-remeras" class="resultado"></div>
-    </div>
-
-    <!-- TAZAS -->
-    <div id="tazas" class="tab-content">
-      <p style="text-align:center; padding:60px 0; color:#777;">Sección tazas en construcción...</p>
-    </div>
-
-    <!-- PAPELERÍA -->
-    <div id="papeleria" class="tab-content">
-      <p style="text-align:center; padding:60px 0; color:#777;">Papelería en proceso...</p>
-    </div>
-
-    <!-- OTROS -->
-    <div id="otros" class="tab-content">
-      <p style="text-align:center; padding:60px 0; color:#777;">Otros productos – pronto disponible</p>
-    </div>
-
-    <footer>
-      Stampycat Sublimación y Estampados• Marzo 2026<br>
-    </footer>
+   </header><!-- Main content -->
+   <main class="relative z-10 max-w-6xl mx-auto px-4 py-6">
+    <!-- Category buttons grid -->
+    <section aria-label="Categorías de productos">
+     <h2 class="font-heading text-xl md:text-2xl font-bold text-gray-700 mb-4 flex items-center gap-2"><span class="cat-paw">🐾</span> Elegí una categoría</h2>
+     <div id="category-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+      <!-- Categories injected by JS -->
+     </div>
+    </section><!-- Products section -->
+    <section id="products-section" class="hidden fade-in" aria-label="Productos">
+     <div class="bg-white/95 rounded-2xl shadow-xl p-4 md:p-6 mb-6">
+      <div class="flex items-center justify-between mb-4">
+       <h2 id="category-title" class="font-heading text-xl md:text-2xl font-bold text-pink-600 flex items-center gap-2"></h2><button id="back-btn" class="flex items-center gap-1 text-sm text-purple-500 hover:text-purple-700 font-semibold transition-colors" aria-label="Volver a categorías"> <i data-lucide="arrow-left" style="width:18px;height:18px;"></i> Volver </button>
+      </div>
+      <div id="products-container">
+       <!-- Subcategories and products injected by JS -->
+      </div>
+     </div>
+    </section><!-- Cart section -->
+    <section id="cart-section" class="hidden fade-in mb-24" aria-label="Resumen del pedido">
+     <div class="bg-white/95 rounded-2xl shadow-xl p-4 md:p-6 stamp-border">
+      <h2 class="font-heading text-xl md:text-2xl font-bold text-purple-600 mb-4 flex items-center gap-2"><i data-lucide="shopping-cart" style="width:24px;height:24px;"></i> Tu Pedido</h2>
+      <div id="cart-items" class="space-y-3 mb-4">
+       <!-- Cart items injected by JS -->
+      </div>
+      <div id="cart-empty" class="text-center py-8 text-gray-400">
+       <span class="text-4xl">🛒</span>
+       <p class="mt-2 font-medium">Tu carrito está vacío</p>
+       <p class="text-sm">Agregá productos para armar tu pedido</p>
+      </div>
+      <div id="cart-footer" class="hidden border-t-2 border-dashed border-pink-200 pt-4 mt-4">
+       <div class="flex justify-between items-center mb-4">
+        <span class="font-heading text-lg font-bold text-gray-700">Total de productos:</span> <span id="cart-total-qty" class="font-heading text-2xl font-extrabold text-pink-600">0</span>
+       </div><button id="whatsapp-btn" class="whatsapp-btn w-full text-white font-heading font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-3">
+        <svg width="24" height="24" viewbox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg><span id="whatsapp-btn-text">Solicitar Presupuesto</span> </button>
+      </div>
+     </div>
+    </section>
+   </main><!-- Floating cart button --> <button id="floating-cart-btn" class="floating-cart hidden bg-gradient-to-br from-pink-500 to-purple-600 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center" aria-label="Ver carrito"> <i data-lucide="shopping-cart" style="width:28px;height:28px;"></i> <span id="floating-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center cart-badge">0</span> </button> <!-- Footer -->
+   <footer class="relative z-10 bg-white/90 border-t-2 border-pink-200 py-4 text-center">
+    <p class="text-sm text-purple-400 font-medium">🐱 STAMPYCAT Argentina · <a href="https://instagram.com/stampycatargentina" target="_blank" rel="noopener noreferrer" class="text-pink-500 hover:underline">@stampycatargentina</a></p>
+   </footer>
   </div>
-
   <script>
-    // Manejo de pestañas (ahora sí busca por id correctamente)
-    document.querySelectorAll('.tab-button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Quitar active de todos los botones y contenidos
-        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  // ==================== DATA ====================
+  const CATEGORIES = [
+    {
+      id: 'tazas-mates',
+      name: 'Tazas y Mates',
+      icon: '☕',
+      gradient: 'from-pink-400 to-rose-500',
+      subcategories: [
+        { name: 'Tazas', products: ['Taza de polímero','Taza de cerámica','Taza de cerámica mágica','Taza mágica glitter','Vaso polímero tipo Starbucks'] },
+        { name: 'Mates', products: ['Mate de polímero','Set matero (Yerbero, azucarero y mate)','Set completo con termo','Termo','Matelisto'] }
+      ]
+    },
+    {
+      id: 'botellas-jarros',
+      name: 'Botellas y Jarros',
+      icon: '🍶',
+      gradient: 'from-blue-400 to-cyan-500',
+      subcategories: [
+        { name: 'Botellas', products: ['Botella hoppy','Botella Hoppy con aluminio','Termo estilo lata'] },
+        { name: 'Jarros', products: ['Jarro chopp polímero','Jarra chopp cervecero','Jarro térmico con tapa','Jarro tipo Cantimplora'] }
+      ]
+    },
+    {
+      id: 'remeras',
+      name: 'Remeras',
+      icon: '👕',
+      gradient: 'from-purple-400 to-violet-500',
+      extras: [{ id: 'extra-estampado', label: 'Estampado adicional (espalda/manga/frente) — solo algodón', perProduct: true }],
+      subcategories: [
+        { name: 'Remeras Niños', products: ['Remera algodón','Remera poliéster','Remera ranglan'] },
+        { name: 'Remeras Adultos', products: ['Remera algodón','Remera poliéster','Remera ranglan'] }
+      ]
+    },
+    {
+      id: 'buzos-camperas',
+      name: 'Buzos y Camperas',
+      icon: '🧥',
+      gradient: 'from-emerald-400 to-teal-500',
+      subcategories: [
+        { name: 'Niños', products: ['Buzo canguro','Buzo cuello redondo'] },
+        { name: 'Adultos', products: ['Buzo canguro','Buzo cuello redondo'] }
+      ]
+    },
+    {
+      id: 'escolar-futbol',
+      name: 'Escolar y Fútbol',
+      icon: '⚽',
+      gradient: 'from-amber-400 to-orange-500',
+      subcategories: [
+        { name: 'Babys', products: ['Body bebé','Body bebé con caja sorpresa'] },
+        { name: 'Escolar', products: ['Set de jardín','Funda carpeta N°3','Regla de madera','Bandas de jura','Señalador de libros'] },
+        { name: 'Fútbol', products: ['Canilleras','Medias canilleras','Banderín'] }
+      ]
+    },
+    {
+      id: 'accesorios',
+      name: 'Accesorios',
+      icon: '🎁',
+      gradient: 'from-pink-400 to-fuchsia-500',
+      subcategories: [
+        { name: 'Madera', products: ['Portaretratos "Feliz Día"','Portaretratos "Tú & Yo"','Portallaves pared','Portacelular','Destapador pared','Estuche cerveza regalo','Servilletero','Set parrillero con plato'] },
+        { name: 'Otros', products: ['Gorras','Llavero destapador','Llaveros camiseta','Llaveros clásicos','Portavasos de tela','Individual de mesa de tela','Mousepad circular','Mousepad rectangular','Almohadas con relleno','Duo taza + almohadón'] }
+      ]
+    },
+    {
+      id: 'fechas-especiales',
+      name: 'Fechas Especiales',
+      icon: '🎉',
+      gradient: 'from-red-400 to-pink-500',
+      subcategories: [
+        { name: 'Día del Padre', products: ['Taza personalizada','Set asado + chopp cervecero'] },
+        { name: 'Día de la Bandera', products: ['Banda para Jura','Pin','Certificado de Jura a la bandera'] },
+        { name: 'Semana de la Dulzura', products: ['Taza temática Dulzura y golosinas'] },
+        { name: 'Egresaditos', products: ['Pack egresaditos','Gorras','Remera de egresados','Souvenir personalizado (a consultar)'] },
+        { name: 'Día del Amigo', products: ['Taza temática día del amigo'] }
+      ]
+    },
+    {
+      id: 'papeleria',
+      name: 'Papelería Creativa',
+      icon: '✨',
+      gradient: 'from-violet-400 to-purple-600',
+      extras: [{ id: 'extra-imantado', label: 'Producto imantado', perProduct: true }],
+      subcategories: [
+        { name: 'Stickers', products: ['Stickers clásicos','Stickers emprendimiento','Stickers holográficos','Stickers holográficos transparentes','Stickers sublimados en vinilo'] },
+        { name: 'Fotos Polaroid', products: ['Fotos polaroid x5','Fotos polaroid x10','Fotos polaroid x15','Tira Fotocabina de 3 x5','Tira Fotocabina de 3 x10','Tira Fotocabina de 3 x15'] },
+        { name: 'Cumpleañitos', products: ['Caketopper clásico','Caketopper 3D','Banderín personalizado','Invitación digital para eventos','Invitación tarjeta física para eventos'] }
+      ]
+    }
+  ];
 
-        // Activar el clicado
-        btn.classList.add('active');
-        const tabId = btn.getAttribute('data-tab');
-        const tabContent = document.getElementById(tabId);
-        if (tabContent) {
-          tabContent.classList.add('active');
-        }
-      });
+  // ==================== STATE ====================
+  let cart = {}; // key: "catId|subName|productName" => { qty, extras: Set, catName, subName, productName, image }
+  let activeCategoryId = null;
+  let prices = {};  // ← Cargaremos los precios desde JSON aquí
+
+  // ==================== CONFIG ====================
+  const defaultConfig = {
+    brand_title: 'STAMPYCAT',
+    brand_subtitle: 'Sublimación • Estampados • Papelería Creativa',
+    whatsapp_button_text: 'Solicitar Presupuesto',
+    background_color: '#fef9f0',
+    surface_color: '#ffffff',
+    text_color: '#4a3560',
+    primary_action_color: '#e84393',
+    secondary_action_color: '#a855f7'
+  };
+
+  function applyConfig(config) {
+    const title = config.brand_title || defaultConfig.brand_title;
+    const subtitle = config.brand_subtitle || defaultConfig.brand_subtitle;
+    const btnText = config.whatsapp_button_text || defaultConfig.whatsapp_button_text;
+    const bgColor = config.background_color || defaultConfig.background_color;
+    const surfColor = config.surface_color || defaultConfig.surface_color;
+    const txtColor = config.text_color || defaultConfig.text_color;
+    const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+    const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+    const fontFamily = config.font_family || "'Baloo 2', cursive";
+    const fontSize = config.font_size || 16;
+
+    document.getElementById('brand-title').textContent = title;
+    document.getElementById('brand-subtitle').textContent = subtitle;
+    document.getElementById('whatsapp-btn-text').textContent = btnText;
+
+    const wrapper = document.getElementById('app-wrapper');
+    wrapper.style.backgroundColor = bgColor;
+
+    document.querySelectorAll('.bg-white\\/95, .bg-white\\/90').forEach(el => {
+      el.style.backgroundColor = surfColor + 'f2';
     });
 
-    // Vista previa imagen
-    function previewImage(event, previewId) {
-      const preview = document.getElementById(previewId);
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-          preview.src = e.target.result;
-          preview.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
+    const headingFont = `${fontFamily}, 'Baloo 2', cursive`;
+    const bodyFont = `${fontFamily}, 'Quicksand', sans-serif`;
+    document.querySelectorAll('.font-heading').forEach(el => { el.style.fontFamily = headingFont; });
+    document.querySelectorAll('.font-body, body').forEach(el => { el.style.fontFamily = bodyFont; });
+
+    const base = fontSize;
+    document.querySelectorAll('h1').forEach(el => { el.style.fontSize = `${base * 1.8}px`; });
+    document.querySelectorAll('h2').forEach(el => { el.style.fontSize = `${base * 1.4}px`; });
+    document.querySelectorAll('h3').forEach(el => { el.style.fontSize = `${base * 1.15}px`; });
+    document.querySelectorAll('p, span, button, label, a').forEach(el => {
+      if (!el.closest('h1') && !el.closest('h2') && !el.closest('h3')) {
+        el.style.fontSize = `${base}px`;
       }
+    });
+  }
+
+  // ==================== ELEMENT SDK ====================
+  window.elementSdk.init({
+    defaultConfig,
+    onConfigChange: async (config) => { applyConfig(config); },
+    mapToCapabilities: (config) => ({
+      recolorables: [
+        { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+        { get: () => config.surface_color || defaultConfig.surface_color, set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+        { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+        { get: () => config.primary_action_color || defaultConfig.primary_action_color, set: (v) => { config.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); } },
+        { get: () => config.secondary_action_color || defaultConfig.secondary_action_color, set: (v) => { config.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); } }
+      ],
+      borderables: [],
+      fontEditable: {
+        get: () => config.font_family || defaultConfig.font_family || "'Baloo 2'",
+        set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+      },
+      fontSizeable: {
+        get: () => config.font_size || defaultConfig.font_size || 16,
+        set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+      }
+    }),
+    mapToEditPanelValues: (config) => new Map([
+      ['brand_title', config.brand_title || defaultConfig.brand_title],
+      ['brand_subtitle', config.brand_subtitle || defaultConfig.brand_subtitle],
+      ['whatsapp_button_text', config.whatsapp_button_text || defaultConfig.whatsapp_button_text]
+    ])
+  });
+
+  // ==================== CARGAR PRECIOS ====================
+  async function loadPrices() {
+    try {
+      const response = await fetch('/precios.json');
+      if (!response.ok) throw new Error('Error al cargar precios');
+      prices = await response.json();
+      console.log('Precios cargados');
+    } catch (err) {
+      console.error('Error cargando precios.json:', err);
+      showToast('⚠️ No se pudieron cargar los precios');
     }
+  }
 
-    // Actualizar círculo de color
-    function updateColorSwatch() {
-      const select = document.getElementById('color-nombre');
-      const swatch = document.getElementById('color-swatch');
-      if (select && swatch) {
-        swatch.style.backgroundColor = select.value;
-      }
-    }
+  // ==================== CALCULAR TOTAL ====================
+  function calculateTotal() {
+    let total = 0;
+    Object.entries(cart).forEach(([key, item]) => {
+      if (item.qty <= 0) return;
+      const [catId, subName, prodName] = key.split('|');
+      const basePrice = prices?.[catId]?.[subName]?.[prodName] || 0;
 
-    // Inicializar color
-    window.addEventListener('load', updateColorSwatch);
-
-    // Precios
-    let precios = {
-      remeras: { basica: 8500, premium: 12500, oversize: 14800 },
-      estampados: { vinilo: 1800, sublimacion: 3200 },
-      extra_por_unidad: 4000
-    };
-
-    async function cargarPrecios() {
-      try {
-        const res = await fetch('precios.json');
-        if (res.ok) {
-          precios = await res.json();
-          console.log('Precios cargados');
-        }
-      } catch (err) {
-        console.warn('precios.json no encontrado → defaults', err);
-      }
-    }
-
-    cargarPrecios();
-
-    // Cálculo
-    function calcular(categoria) {
-      if (categoria !== 'remeras') {
-        alert('Sección en desarrollo');
-        return;
+      let extraCost = 0;
+      if (item.extras.size > 0) {
+        if (item.extras.has('extra-estampado')) extraCost += 3000;  // ejemplo – modificalo
+        if (item.extras.has('extra-imantado')) extraCost += 800;    // ejemplo – modificalo
       }
 
-      const cantidad   = parseInt(document.getElementById('cant-remera').value) || 1;
-      const modelo     = document.getElementById('modelo-remera').value;
-      const estampKey  = document.getElementById('tipo-estampado').value;
-      const extrasQty  = parseInt(document.getElementById('extra-remera').value) || 0;
+      total += (basePrice + extraCost) * item.qty;
+    });
+    return total;
+  }
 
-      const base       = precios.remeras?.[modelo]     || 10000;
-      const estampado  = precios.estampados?.[estampKey] || 2000;
-      const extraUnit  = precios.extra_por_unidad      || 4000;
-      const extrasTotal = extrasQty * extraUnit;
-
-      const precioUnit = base + estampado + extrasTotal;
-      const total      = precioUnit * cantidad;
-
-      const resultado = document.getElementById('resultado-remeras');
-      resultado.innerHTML = `
-        <strong>¡KABOOM! Total estimado: $${total.toLocaleString('es-AR')}</strong><br>
-        <span class="precio-unit">Precio por unidad: $${precioUnit.toLocaleString('es-AR')}</span><br><br>
-        <small>Detalle: base $${base.toLocaleString('es-AR')} + estampado $${estampado.toLocaleString('es-AR')} + extras $${extrasTotal.toLocaleString('es-AR')}</small>
+  // ==================== RENDER CATEGORIES ====================
+  function renderCategories() {
+    const grid = document.getElementById('category-grid');
+    grid.innerHTML = '';
+    CATEGORIES.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = `category-btn bg-gradient-to-br ${cat.gradient} text-white rounded-2xl p-4 md:p-5 flex flex-col items-center gap-2 shadow-lg`;
+      btn.dataset.catId = cat.id;
+      if (activeCategoryId === cat.id) btn.classList.add('active');
+      btn.innerHTML = `
+        <span class="text-3xl md:text-4xl">${cat.icon}</span>
+        <span class="font-heading font-bold text-sm md:text-base text-center leading-tight">${cat.name}</span>
       `;
+      btn.addEventListener('click', () => selectCategory(cat.id));
+      grid.appendChild(btn);
+    });
+  }
+
+  // ==================== SELECT CATEGORY ====================
+  function selectCategory(catId) {
+    activeCategoryId = catId;
+    const cat = CATEGORIES.find(c => c.id === catId);
+    if (!cat) return;
+
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.catId === catId);
+    });
+
+    const section = document.getElementById('products-section');
+    section.classList.remove('hidden');
+    document.getElementById('category-title').innerHTML = `${cat.icon} ${cat.name}`;
+
+    const container = document.getElementById('products-container');
+    container.innerHTML = '';
+
+    if (cat.extras && cat.extras.length > 0) {
+      const extrasDiv = document.createElement('div');
+      extrasDiv.className = 'bg-yellow-50 border-2 border-yellow-200 rounded-xl p-3 mb-4 slide-down';
+      extrasDiv.innerHTML = `
+        <p class="font-heading font-bold text-yellow-700 text-sm flex items-center gap-2 mb-1">
+          <i data-lucide="info" style="width:16px;height:16px;"></i> Extras disponibles
+        </p>
+        <p class="text-yellow-600 text-xs">${cat.extras.map(e => e.label).join(' · ')}</p>
+      `;
+      container.appendChild(extrasDiv);
     }
-  </script>
-</body>
-</html>
+
+    cat.subcategories.forEach((sub, si) => {
+      const subDiv = document.createElement('div');
+      subDiv.className = 'mb-5 slide-down';
+      subDiv.style.animationDelay = `${si * 0.08}s`;
+
+      const subHeader = document.createElement('h3');
+      subHeader.className = 'subcategory-header font-heading font-bold text-purple-600 text-lg mb-3 pb-1';
+      subHeader.textContent = sub.name;
+      subDiv.appendChild(subHeader);
+
+      const prodGrid = document.createElement('div');
+      prodGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2';
+
+      sub.products.forEach(prod => {
+        const key = `${catId}|${sub.name}|${prod}`;
+        const qty = cart[key] ? cart[key].qty : 0;
+        const extras = cart[key] ? cart[key].extras : new Set();
+        const image = cart[key]?.image || null;
+
+        const card = document.createElement('div');
+        card.className = 'product-card bg-white rounded-xl p-3 flex flex-col gap-2';
+        card.dataset.key = key;
+
+        let extrasHTML = '';
+        if (cat.extras) {
+          cat.extras.forEach(ex => {
+            const checked = extras.has(ex.id) ? 'checked' : '';
+            extrasHTML += `
+              <label class="flex items-center gap-1 cursor-pointer">
+                <input type="checkbox" class="extras-check w-4 h-4 rounded" data-extra-id="${ex.id}" data-key="${key}" ${checked}>
+                <span class="text-xs text-gray-500">${ex.label}</span>
+              </label>
+            `;
+          });
+        }
+
+        let imageHTML = '';
+        if (image) {
+          imageHTML = `
+            <div class="relative w-full h-20 bg-gray-100 rounded-lg overflow-hidden mb-1">
+              <img src="${image}" alt="Referencia" class="w-full h-full object-cover" loading="lazy">
+              <button class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-600 text-xs font-bold" data-remove-image="${key}" aria-label="Eliminar imagen">×</button>
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-gray-700 text-sm truncate">${prod}</p>
+              ${extrasHTML}
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <button class="qty-btn w-8 h-8 rounded-full bg-pink-100 text-pink-600 font-bold flex items-center justify-center hover:bg-pink-200 text-sm" data-action="dec" data-key="${key}" aria-label="Quitar uno">−</button>
+              <span class="w-8 text-center font-heading font-bold text-gray-700 text-sm" data-qty-display="${key}">${qty}</span>
+              <button class="qty-btn w-8 h-8 rounded-full bg-pink-500 text-white font-bold flex items-center justify-center hover:bg-pink-600 text-sm" data-action="inc" data-key="${key}" data-cat-id="${catId}" data-sub-name="${sub.name}" data-prod-name="${prod}" aria-label="Agregar uno">+</button>
+            </div>
+          </div>
+          ${imageHTML}
+          <label class="flex items-center justify-center gap-1 w-full px-2 py-1.5 bg-purple-50 hover:bg-purple-100 rounded-lg cursor-pointer transition-colors border border-purple-200 text-xs font-medium text-purple-600">
+            <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
+            <span class="hidden sm:inline">Agregar referencia</span>
+            <span class="sm:hidden">Foto</span>
+            <input type="file" class="image-input hidden" accept="image/*" data-key="${key}">
+          </label>
+        `;
+
+        prodGrid.appendChild(card);
+      });
+
+      subDiv.appendChild(prodGrid);
+      container.appendChild(subDiv);
+    });
+
+    lucide.createIcons();
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ==================== CART LOGIC ====================
+  function updateQty(key, delta, catId, subName, prodName) {
+    if (!cart[key]) {
+      if (delta < 0) return;
+      cart[key] = { qty: 0, extras: new Set(), image: null, catName: CATEGORIES.find(c => c.id === catId)?.name || '', subName, productName: prodName };
+    }
+    cart[key].qty = Math.max(0, cart[key].qty + delta);
+    if (cart[key].qty === 0) {
+      delete cart[key];
+    }
+
+    const displays = document.querySelectorAll(`[data-qty-display="${key}"]`);
+    displays.forEach(d => { d.textContent = cart[key] ? cart[key].qty : 0; });
+
+    if (delta > 0) showToast(`✅ ${prodName} agregado`);
+    updateCartUI();
+  }
+
+  function toggleExtra(key, extraId) {
+    if (!cart[key]) return;
+    if (cart[key].extras.has(extraId)) {
+      cart[key].extras.delete(extraId);
+    } else {
+      cart[key].extras.add(extraId);
+    }
+    updateCartUI();
+  }
+
+  function handleImageUpload(key, file) {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast('❌ Solo se permiten imágenes');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('❌ La imagen es muy grande (máx 5MB)');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (!cart[key]) {
+        const parts = key.split('|');
+        const catId = parts[0];
+        const subName = parts[1];
+        const prodName = parts[2];
+        cart[key] = { qty: 1, extras: new Set(), image: null, catName: CATEGORIES.find(c => c.id === catId)?.name || '', subName, productName: prodName };
+        const displays = document.querySelectorAll(`[data-qty-display="${key}"]`);
+        displays.forEach(d => { d.textContent = '1'; });
+      }
+      cart[key].image = e.target.result;
+      showToast('📸 Imagen guardada');
+      selectCategory(activeCategoryId);
+      updateCartUI();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeImage(key) {
+    if (cart[key]) {
+      cart[key].image = null;
+      showToast('🗑️ Imagen eliminada');
+      selectCategory(activeCategoryId);
+      updateCartUI();
+    }
+  }
+
+  function updateCartUI() {
+    const totalItems = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+    const cartSection = document.getElementById('cart-section');
+    const floatingBtn = document.getElementById('floating-cart-btn');
+    const badge = document.getElementById('floating-badge');
+    const cartItems = document.getElementById('cart-items');
+    const cartEmpty = document.getElementById('cart-empty');
+    const cartFooter = document.getElementById('cart-footer');
+    const totalQtyEl = document.getElementById('cart-total-qty');
+
+    if (totalItems > 0) {
+      cartSection.classList.remove('hidden');
+      floatingBtn.classList.remove('hidden');
+      floatingBtn.classList.add('flex');
+      badge.textContent = totalItems;
+      cartEmpty.classList.add('hidden');
+      cartFooter.classList.remove('hidden');
+      totalQtyEl.textContent = totalItems + (totalItems === 1 ? ' producto' : ' productos');
+    } else {
+      cartSection.classList.add('hidden');
+      floatingBtn.classList.add('hidden');
+      floatingBtn.classList.remove('flex');
+      cartEmpty.classList.remove('hidden');
+      cartFooter.classList.add('hidden');
+    }
+
+    cartItems.innerHTML = '';
+    Object.entries(cart).forEach(([key, item]) => {
+      if (item.qty <= 0) return;
+
+      const cat = CATEGORIES.find(c => c.id === key.split('|')[0]);
+      let extrasText = '';
+      if (item.extras.size > 0 && cat && cat.extras) {
+        const names = cat.extras.filter(e => item.extras.has(e.id)).map(e => e.label);
+        extrasText = names.length > 0 ? `<span class="text-xs text-purple-400 block mt-0.5">+ ${names.join(', ')}</span>` : '';
+      }
+
+      let imagePreview = '';
+      if (item.image) {
+        imagePreview = `
+          <div class="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border border-purple-200">
+            <img src="${item.image}" alt="Referencia" class="w-full h-full object-cover">
+          </div>
+        `;
+      }
+
+      const cartItem = document.createElement('div');
+      cartItem.className = 'flex items-center justify-between bg-pink-50 rounded-xl p-3 gap-2';
+      cartItem.innerHTML = `
+        <div class="flex items-center gap-2 flex-1 min-w-0">
+          ${imagePreview}
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-700 text-sm truncate">${item.productName}</p>
+            <p class="text-xs text-gray-400">${item.catName} › ${item.subName}</p>
+            ${extrasText}
+            ${item.image ? '<p class="text-xs text-purple-500 mt-0.5">📸 Con referencia</p>' : ''}
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="font-heading font-bold text-pink-600 text-lg">×${item.qty}</span>
+          <button class="w-7 h-7 rounded-full bg-red-100 text-red-500 flex items-center justify-center hover:bg-red-200 transition-colors" data-remove-key="${key}" aria-label="Eliminar del carrito">
+            <i data-lucide="x" style="width:14px;height:14px;"></i>
+          </button>
+        </div>
+      `;
+      cartItems.appendChild(cartItem);
+    });
+
+    // BLOQUE DEL TOTAL ESTIMADO (nuevo)
+    let totalBlock = document.getElementById('cart-total-block');
+    const total = calculateTotal();
+    const hasItems = totalItems > 0;
+
+    if (hasItems) {
+      if (!totalBlock) {
+        totalBlock = document.createElement('div');
+        totalBlock.id = 'cart-total-block';
+        totalBlock.className = 'mt-6 pt-4 border-t-2 border-dashed border-pink-300 text-center';
+        totalBlock.innerHTML = `
+          <p class="font-heading text-lg font-bold text-gray-700 mb-2">Total estimado</p>
+          <p id="cart-total-price" class="font-heading text-3xl font-extrabold text-pink-600 drop-shadow-sm">
+            $${total.toLocaleString('es-AR')}
+          </p>
+          <p class="text-xs text-purple-500 mt-1">* Precio referencial – consultar por WhatsApp</p>
+        `;
+        const whatsappBtn = document.getElementById('whatsapp-btn');
+        if (whatsappBtn && whatsappBtn.parentElement) {
+          whatsappBtn.parentElement.insertBefore(totalBlock, whatsappBtn);
+        } else {
+          document.getElementById('cart-footer').appendChild(totalBlock);
+        }
+      } else {
+        const priceEl = document.getElementById('cart-total-price');
+        if (priceEl) priceEl.textContent = `$${total.toLocaleString('es-AR')}`;
+      }
+    } else if (totalBlock) {
+      totalBlock.remove();
+    }
+
+    lucide.createIcons();
+  }
+
+  function removeFromCart(key) {
+    const name = cart[key]?.productName || 'Producto';
+    delete cart[key];
+    const displays = document.querySelectorAll(`[data-qty-display="${key}"]`);
+    displays.forEach(d => { d.textContent = '0'; });
+    showToast(`🗑️ ${name} eliminado`);
+    updateCartUI();
+  }
+
+  // ==================== WHATSAPP ====================
+  function sendWhatsApp() {
+    const items = Object.entries(cart).filter(([, item]) => item.qty > 0);
+    if (items.length === 0) return;
+
+    let message = '🐱 *STAMPYCAT - Solicitud de Presupuesto*\n\nHola! Me gustaría consultar por:\n\n';
+    items.forEach(([key, item]) => {
+      const cat = CATEGORIES.find(c => c.id === key.split('|')[0]);
+      let extras = '';
+      if (item.extras.size > 0 && cat && cat.extras) {
+        const names = cat.extras.filter(e => item.extras.has(e.id)).map(e => e.label);
+        if (names.length > 0) extras = ` _(${names.join(', ')})_`;
+      }
+      const imageNote = item.image ? ' 📸 _[con referencia adjunta]_' : '';
+      message += `• *${item.productName}* × ${item.qty}${extras}${imageNote}\n  _${item.catName} › ${item.subName}_\n\n`;
+    });
+
+    const total = calculateTotal();
+    if (total > 0) {
+      message += `*Total estimado*: $${total.toLocaleString('es-AR')}\n\n`;
+    }
+    message += '¡Gracias! 😊';
+
+    const phone = '5491173617819';
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  }
+
+  // ==================== TOAST ====================
+  function showToast(msg) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast-msg bg-gray-800 text-white px-4 py-2 rounded-xl shadow-lg text-sm font-medium';
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(() => { toast.remove(); }, 2500);
+  }
+
+  // ==================== EVENT DELEGATION ====================
+  document.addEventListener('click', (e) => {
+    const qtyBtn = e.target.closest('[data-action]');
+    if (qtyBtn) {
+      const action = qtyBtn.dataset.action;
+      const key = qtyBtn.dataset.key;
+      const delta = action === 'inc' ? 1 : -1;
+      const catId = qtyBtn.dataset.catId || key.split('|')[0];
+      const subName = qtyBtn.dataset.subName || key.split('|')[1];
+      const prodName = qtyBtn.dataset.prodName || key.split('|')[2];
+      updateQty(key, delta, catId, subName, prodName);
+      return;
+    }
+
+    const removeBtn = e.target.closest('[data-remove-key]');
+    if (removeBtn) {
+      removeFromCart(removeBtn.dataset.removeKey);
+      return;
+    }
+
+    const removeImageBtn = e.target.closest('[data-remove-image]');
+    if (removeImageBtn) {
+      e.preventDefault();
+      removeImage(removeImageBtn.dataset.removeImage);
+      return;
+    }
+
+    if (e.target.closest('#back-btn')) {
+      document.getElementById('products-section').classList.add('hidden');
+      activeCategoryId = null;
+      document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+      return;
+    }
+
+    if (e.target.closest('#whatsapp-btn')) {
+      sendWhatsApp();
+      return;
+    }
+
+    if (e.target.closest('#floating-cart-btn')) {
+      document.getElementById('cart-section').scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+  });
+
+  document.addEventListener('change', (e) => {
+    if (e.target.classList.contains('extras-check')) {
+      const key = e.target.dataset.key;
+      const extraId = e.target.dataset.extraId;
+      if (!cart[key]) {
+        const parts = key.split('|');
+        const catId = parts[0];
+        const subName = parts[1];
+        const prodName = parts[2];
+        cart[key] = { qty: 1, extras: new Set(), image: null, catName: CATEGORIES.find(c => c.id === catId)?.name || '', subName, productName: prodName };
+        const displays = document.querySelectorAll(`[data-qty-display="${key}"]`);
+        displays.forEach(d => { d.textContent = '1'; });
+      }
+      toggleExtra(key, extraId);
+    }
+
+    if (e.target.classList.contains('image-input')) {
+      const key = e.target.dataset.key;
+      const file = e.target.files[0];
+      handleImageUpload(key, file);
+      e.target.value = '';
+    }
+  });
+
+  // ==================== INIT ====================
+  loadPrices().then(() => {
+    renderCategories();
+    lucide.createIcons();
+  });
+</script>
