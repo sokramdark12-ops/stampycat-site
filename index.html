@@ -253,64 +253,57 @@
           { name: 'Botellas', products: ['Botella hoppy','Botella Hoppy con aluminio','Termo estilo lata'] },
           { name: 'Jarros', products: ['Jarro chopp polímero','Jarra chopp cervecero','Jarro térmico con tapa','Jarro tipo Cantimplora'] }
         ] },
-   { 
-  id: 'remeras', 
-  name: 'Remeras', 
-  icon: '👕', 
-  gradient: 'from-purple-400 to-violet-500',
-  extras: [
-    { id: 'extra-estampado', label: 'Estampado adicional (espalda/manga/frente) — solo algodón', perProduct: true }
-  ],
-
-  // Colores estándar (para algodón y poliéster)
-  standardColors: [
-    { value: 'blanco',         label: 'Blanco',          hex: '#ffffff' },
-    { value: 'negro',          label: 'Negro',           hex: '#000000' },
-    { value: 'azul_marino',    label: 'Azul marino',     hex: '#1e3a8a' },
-    { value: 'azul_francia',   label: 'Azul francia',    hex: '#2563eb' },
-    { value: 'celeste',        label: 'Celeste',         hex: '#60a5fa' },
-    { value: 'celeste_pastel', label: 'Celeste pastel',  hex: '#a5d8ff' },
-    { value: 'verde_oliva',    label: 'Verde oliva',     hex: '#6b7280' },
-    { value: 'verde_militar',  label: 'Verde militar',   hex: '#4b5320' },
-    { value: 'verde_manzana',  label: 'Verde manzana',   hex: '#86efac' },
-    { value: 'verde_pastel',   label: 'Verde pastel',    hex: '#bbf7d0' },
-    { value: 'rojo',           label: 'Rojo',            hex: '#ef4444' },
-    { value: 'bordo',          label: 'Bordo',           hex: '#7f1d1d' },
-    { value: 'rosa',           label: 'Rosa',            hex: '#ec4899' },
-    { value: 'violeta',        label: 'Violeta',         hex: '#a855f7' },
-    { value: 'lila',           label: 'Lila',            hex: '#c084fc' },
-    { value: 'amarillo',       label: 'Amarillo',        hex: '#eab308' },
-    { value: 'amarillo_pastel',label: 'Amarillo pastel', hex: '#fef08a' },
-    { value: 'naranja',        label: 'Naranja',         hex: '#f97316' },
-    { value: 'melange',        label: 'Melange',         hex: '#9ca3af' }
-  ],
-
-  // Colores EXCLUSIVOS para ranglan
-  ranglanColors: [
-    { value: 'blanco_negro',        label: 'Blanco c/ negro',         hex: '#ffffff' /* fondo blanco, mangas negras */ },
-    { value: 'blanco_verde',        label: 'Blanco c/ verde',         hex: '#ffffff' },
-    { value: 'blanco_azulmarino',   label: 'Blanco c/ azul marino',   hex: '#ffffff' },
-    { value: 'blanco_azulfrancia',  label: 'Blanco c/ azul Francia',  hex: '#ffffff' },
-    { value: 'blanco_amarillo',     label: 'Blanco c/ amarillo',      hex: '#ffffff' },
-    { value: 'blanco_naranja',      label: 'Blanco c/ Naranja',       hex: '#ffffff' },
-    { value: 'melange_negro',       label: 'Gris melange c/ Negro',   hex: '#9ca3af' /* fondo melange, mangas negras */ },
-    { value: 'blanco_celeste',      label: 'Blanco c/ celeste',       hex: '#ffffff' }
-  ],
-
-  // Talleres (sin cambios respecto a lo anterior)
-  sizes: {
-    ninos: ['4','6','8','10','12','14','16'],
-    adultos: {
-      comunes: ['1','2','3','4','5'],
-      especiales: ['6','7','8','9','10']
-    }
-  },
-
-  subcategories: [
-    { name: 'Remeras Niños',   products: ['Remera algodón','Remera poliéster','Remera ranglan'] },
-    { name: 'Remeras Adultos', products: ['Remera algodón','Remera poliéster','Remera ranglan'] }
-  ] 
-},
+      { 
+        id: 'remeras', 
+        name: 'Remeras', 
+        icon: '👕', 
+        gradient: 'from-purple-400 to-violet-500',
+        extras: [
+          { id: 'extra-estampado', label: 'Estampado adicional (espalda/manga/frente) — solo algodón', perProduct: true }
+        ],
+        standardColors: [
+          { value: 'blanco',         label: 'Blanco',          hex: '#ffffff' },
+          { value: 'negro',          label: 'Negro',           hex: '#000000' },
+          { value: 'azul_marino',    label: 'Azul marino',     hex: '#1e3a8a' },
+          { value: 'azul_francia',   label: 'Azul francia',    hex: '#2563eb' },
+          { value: 'celeste',        label: 'Celeste',         hex: '#60a5fa' },
+          { value: 'celeste_pastel', label: 'Celeste pastel',  hex: '#a5d8ff' },
+          { value: 'verde_oliva',    label: 'Verde oliva',     hex: '#6b7280' },
+          { value: 'verde_militar',  label: 'Verde militar',   hex: '#4b5320' },
+          { value: 'verde_manzana',  label: 'Verde manzana',   hex: '#86efac' },
+          { value: 'verde_pastel',   label: 'Verde pastel',    hex: '#bbf7d0' },
+          { value: 'rojo',           label: 'Rojo',            hex: '#ef4444' },
+          { value: 'bordo',          label: 'Bordo',           hex: '#7f1d1d' },
+          { value: 'rosa',           label: 'Rosa',            hex: '#ec4899' },
+          { value: 'violeta',        label: 'Violeta',         hex: '#a855f7' },
+          { value: 'lila',           label: 'Lila',            hex: '#c084fc' },
+          { value: 'amarillo',       label: 'Amarillo',        hex: '#eab308' },
+          { value: 'amarillo_pastel',label: 'Amarillo pastel', hex: '#fef08a' },
+          { value: 'naranja',        label: 'Naranja',         hex: '#f97316' },
+          { value: 'melange',        label: 'Melange',         hex: '#9ca3af' }
+        ],
+        ranglanColors: [
+          { value: 'blanco_negro',        label: 'Blanco c/ negro',         hex: '#ffffff' },
+          { value: 'blanco_verde',        label: 'Blanco c/ verde',         hex: '#ffffff' },
+          { value: 'blanco_azulmarino',   label: 'Blanco c/ azul marino',   hex: '#ffffff' },
+          { value: 'blanco_azulfrancia',  label: 'Blanco c/ azul Francia',  hex: '#ffffff' },
+          { value: 'blanco_amarillo',     label: 'Blanco c/ amarillo',      hex: '#ffffff' },
+          { value: 'blanco_naranja',      label: 'Blanco c/ Naranja',       hex: '#ffffff' },
+          { value: 'melange_negro',       label: 'Gris melange c/ Negro',   hex: '#9ca3af' },
+          { value: 'blanco_celeste',      label: 'Blanco c/ celeste',       hex: '#ffffff' }
+        ],
+        sizes: {
+          ninos: ['4','6','8','10','12','14','16'],
+          adultos: {
+            comunes: ['1','2','3','4','5'],
+            especiales: ['6','7','8','9','10']
+          }
+        },
+        subcategories: [
+          { name: 'Remeras Niños',   products: ['Remera algodón','Remera poliéster','Remera ranglan'] },
+          { name: 'Remeras Adultos', products: ['Remera algodón','Remera poliéster','Remera ranglan'] }
+        ] 
+      },
       { id: 'buzos-camperas', name: 'Buzos y Camperas', icon: '🧥', gradient: 'from-emerald-400 to-teal-500',
         subcategories: [
           { name: 'Niños', products: ['Buzo canguro','Buzo cuello redondo'] },
@@ -529,127 +522,122 @@
         const prodGrid = document.createElement('div');
         prodGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2';
 
-       sub.products.forEach(prod => {
-  const key = `${catId}|${sub.name}|${prod}`;
-  const qty = cart[key]?.qty || 0;
-  const extras = cart[key]?.extras || new Set();
-  const image = cart[key]?.image || null;
+        sub.products.forEach(prod => {
+          const key = `${catId}|${sub.name}|${prod}`;
+          const qty = cart[key]?.qty || 0;
+          const extras = cart[key]?.extras || new Set();
+          const image = cart[key]?.image || null;
 
-  const card = document.createElement('div');
-  card.className = 'product-card bg-white rounded-xl p-3 flex flex-col gap-2';
-  card.dataset.key = key;
+          const card = document.createElement('div');
+          card.className = 'product-card bg-white rounded-xl p-3 flex flex-col gap-2';
+          card.dataset.key = key;
 
-  let extrasHTML = '';
-  if (cat.extras) {
-    cat.extras.forEach(ex => {
-      const checked = extras.has(ex.id) ? 'checked' : '';
-      extrasHTML += `
-        <label class="flex items-center gap-1 cursor-pointer">
-          <input type="checkbox" class="extras-check w-4 h-4 rounded" data-extra-id="${ex.id}" data-key="${key}" ${checked}>
-          <span class="text-xs text-gray-500">${ex.label}</span>
-        </label>
-      `;
-    });
-  }
+          let extrasHTML = '';
+          if (cat.extras) {
+            cat.extras.forEach(ex => {
+              const checked = extras.has(ex.id) ? 'checked' : '';
+              extrasHTML += `
+                <label class="flex items-center gap-1 cursor-pointer">
+                  <input type="checkbox" class="extras-check w-4 h-4 rounded" data-extra-id="${ex.id}" data-key="${key}" ${checked}>
+                  <span class="text-xs text-gray-500">${ex.label}</span>
+                </label>
+              `;
+            });
+          }
 
-  let imageHTML = '';
-  if (image) {
-    imageHTML = `
-      <div class="relative w-full h-20 bg-gray-100 rounded-lg overflow-hidden mb-1">
-        <img src="${image}" alt="Referencia" class="w-full h-full object-cover" loading="lazy">
-        <button class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-600 text-xs font-bold" data-remove-image="${key}">×</button>
-      </div>
-    `;
-  }
+          let imageHTML = '';
+          if (image) {
+            imageHTML = `
+              <div class="relative w-full h-20 bg-gray-100 rounded-lg overflow-hidden mb-1">
+                <img src="${image}" alt="Referencia" class="w-full h-full object-cover" loading="lazy">
+                <button class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-600 text-xs font-bold" data-remove-image="${key}">×</button>
+              </div>
+            `;
+          }
 
-  // ────────────────────────────────────────────────────────────────
-  // LÓGICA PARA TALLE Y COLOR SEGÚN TIPO DE REMERA
-  // ────────────────────────────────────────────────────────────────
+          // Solo calculamos talles y colores si es la categoría Remeras
+          let tallesHTML = '';
+          let colorFieldHTML = '';
 
-  const esPoliester = prod.toLowerCase().includes('poliéster') || prod.toLowerCase().includes('poliester');
-  const esRanglan  = prod.toLowerCase().includes('ranglan');
-  const esNinos    = sub.name.toLowerCase().includes('niñ') || sub.name.toLowerCase().includes('nino');
+          if (cat.id === 'remeras') {
+            const esPoliester = prod.toLowerCase().includes('poliéster') || prod.toLowerCase().includes('poliester');
+            const esRanglan   = prod.toLowerCase().includes('ranglan');
+            const esNinos     = sub.name.toLowerCase().includes('niñ') || sub.name.toLowerCase().includes('nino');
 
-  // Talleres
-  let tallesHTML = '';
-  if (esNinos) {
-    // Niños: 4 a 16
-    tallesHTML = cat.sizes.ninos.map(s => `<option value="${s}">${s}</option>`).join('');
-  } else {
-    // Adultos: comunes + especiales con advertencia
-    const comunes = cat.sizes.adultos.comunes.map(s => `<option value="${s}">${s}</option>`).join('');
-    const especiales = cat.sizes.adultos.especiales.map(s => `<option value="${s}">${s} (+costo extra)</option>`).join('');
-    
-    tallesHTML = `
-      ${comunes}
-      <optgroup label="Talles especiales – consultar costo adicional">
-        ${especiales}
-      </optgroup>
-    `;
-  }
+            // Talleres
+            if (esNinos) {
+              tallesHTML = cat.sizes.ninos.map(s => `<option value="${s}">${s}</option>`).join('');
+            } else {
+              const comunes   = cat.sizes.adultos.comunes.map(s => `<option value="${s}">${s}</option>`).join('');
+              const especiales = cat.sizes.adultos.especiales.map(s => `<option value="${s}">${s} (+costo extra)</option>`).join('');
+              tallesHTML = `
+                ${comunes}
+                <optgroup label="Talles especiales – consultar costo adicional">
+                  ${especiales}
+                </optgroup>
+              `;
+            }
 
-  // Colores según tipo de remera
-  let colorOptions = cat.standardColors;
-  let colorLabel = 'Color';
+            // Colores
+            let colorOptions = cat.standardColors;
+            let colorLabel   = 'Color';
 
-  if (esRanglan) {
-    colorOptions = cat.ranglanColors;
-    colorLabel = 'Combinación de colores';
-  }
+            if (esRanglan) {
+              colorOptions = cat.ranglanColors;
+              colorLabel   = 'Combinación de colores';
+            }
 
-  const colorOptionsHTML = colorOptions.map(c => 
-    `<option value="${c.value}">${c.label}</option>`
-  ).join('');
+            const colorOptionsHTML = colorOptions.map(c => 
+              `<option value="${c.value}">${c.label}</option>`
+            ).join('');
 
-  const colorFieldHTML = `
-    <div>
-      <label class="block text-gray-600 font-medium mb-1">${colorLabel}</label>
-      <select class="color-select w-full border border-gray-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-400" data-key="${key}">
-        <option value="">Elegir ${colorLabel.toLowerCase()}</option>
-        ${colorOptionsHTML}
-      </select>
-    </div>
-  `;
+            colorFieldHTML = `
+              <div>
+                <label class="block text-gray-600 font-medium mb-1">${colorLabel}</label>
+                <select class="color-select w-full border border-gray-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-400" data-key="${key}">
+                  <option value="">Elegir ${colorLabel.toLowerCase()}</option>
+                  ${colorOptionsHTML}
+                </select>
+              </div>
+            `;
+          }
 
-  // ────────────────────────────────────────────────────────────────
-
-  card.innerHTML = `
-    <div class="flex items-center justify-between gap-2">
-      <div class="flex-1 min-w-0">
-        <p class="font-semibold text-gray-700 text-sm truncate">${prod}</p>
-               ${extrasHTML}
-
-        ${cat.id === 'remeras' ? `
-          <div class="mt-3 grid grid-cols-2 gap-3 text-xs">
-            <div>
-              <label class="block text-gray-600 font-medium mb-1">Talle</label>
-              <select class="talle-select w-full border border-gray-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-400" data-key="${key}">
-                <option value="">Elegir talle</option>
-                ${tallesHTML}
-              </select>
+          card.innerHTML = `
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-gray-700 text-sm truncate">${prod}</p>
+                ${extrasHTML}
+                
+                ${cat.id === 'remeras' ? `
+                  <div class="mt-3 grid grid-cols-2 gap-3 text-xs">
+                    <div>
+                      <label class="block text-gray-600 font-medium mb-1">Talle</label>
+                      <select class="talle-select w-full border border-gray-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-400" data-key="${key}">
+                        <option value="">Elegir talle</option>
+                        ${tallesHTML}
+                      </select>
+                    </div>
+                    ${colorFieldHTML}
+                  </div>
+                ` : ''}
+              </div>
+              <div class="flex items-center gap-1 shrink-0">
+                <button class="qty-btn w-8 h-8 rounded-full bg-pink-100 text-pink-600 font-bold flex items-center justify-center hover:bg-pink-200 text-sm" data-action="dec" data-key="${key}">−</button>
+                <span class="w-8 text-center font-heading font-bold text-gray-700 text-sm" data-qty-display="${key}">${qty}</span>
+                <button class="qty-btn w-8 h-8 rounded-full bg-pink-500 text-white font-bold flex items-center justify-center hover:bg-pink-600 text-sm" data-action="inc" data-key="${key}" data-cat-id="${catId}" data-sub-name="${sub.name}" data-prod-name="${prod}">+</button>
+              </div>
             </div>
-            ${colorFieldHTML}
-          </div>
-        ` : ''}
-</div>
-      </div>
-      <div class="flex items-center gap-1 shrink-0">
-        <button class="qty-btn w-8 h-8 rounded-full bg-pink-100 text-pink-600 font-bold flex items-center justify-center hover:bg-pink-200 text-sm" data-action="dec" data-key="${key}">−</button>
-        <span class="w-8 text-center font-heading font-bold text-gray-700 text-sm" data-qty-display="${key}">${qty}</span>
-        <button class="qty-btn w-8 h-8 rounded-full bg-pink-500 text-white font-bold flex items-center justify-center hover:bg-pink-600 text-sm" data-action="inc" data-key="${key}" data-cat-id="${catId}" data-sub-name="${sub.name}" data-prod-name="${prod}">+</button>
-      </div>
-    </div>
-    ${imageHTML}
-    <label class="flex items-center justify-center gap-1 w-full px-2 py-1.5 bg-purple-50 hover:bg-purple-100 rounded-lg cursor-pointer transition-colors border border-purple-200 text-xs font-medium text-purple-600">
-      <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
-      <span class="hidden sm:inline">Agregar referencia</span>
-      <span class="sm:hidden">Foto</span>
-      <input type="file" class="image-input hidden" accept="image/*" data-key="${key}">
-    </label>
-  `;
+            ${imageHTML}
+            <label class="flex items-center justify-center gap-1 w-full px-2 py-1.5 bg-purple-50 hover:bg-purple-100 rounded-lg cursor-pointer transition-colors border border-purple-200 text-xs font-medium text-purple-600">
+              <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
+              <span class="hidden sm:inline">Agregar referencia</span>
+              <span class="sm:hidden">Foto</span>
+              <input type="file" class="image-input hidden" accept="image/*" data-key="${key}">
+            </label>
+          `;
 
-  prodGrid.appendChild(card);
-});
+          prodGrid.appendChild(card);
+        });
 
         subDiv.appendChild(prodGrid);
         container.appendChild(subDiv);
@@ -776,12 +764,12 @@
               <p class="text-xs text-gray-400">${item.catName} › ${item.subName}</p>
               ${extrasText}
               ${item.talle || item.color ? `
-  <p class="text-xs text-purple-600 mt-0.5">
-    ${item.talle ? `Talle: <strong>${item.talle}</strong>` : ''}
-    ${item.talle && item.color ? ' • ' : ''}
-    ${item.color ? `Color: <strong>${cat?.colors?.find(c => c.value === item.color)?.label || item.color}</strong>` : ''}
-  </p>
-` : ''}
+                <p class="text-xs text-purple-600 mt-0.5">
+                  ${item.talle ? `Talle: <strong>${item.talle}</strong>` : ''}
+                  ${item.talle && item.color ? ' • ' : ''}
+                  ${item.color ? `Color: <strong>${(cat?.standardColors || cat?.ranglanColors || []).find(c => c.value === item.color)?.label || item.color}</strong>` : ''}
+                </p>
+              ` : ''}
               ${item.image ? '<p class="text-xs text-purple-500 mt-0.5">📸 Con referencia</p>' : ''}
             </div>
           </div>
@@ -847,19 +835,19 @@
           if (names.length) extras = ` _(${names.join(', ')})_`;
         }
         const imageNote = item.image ? ' 📸 _[con referencia adjunta]_' : '';
-       let detalles = '';
-if (item.talle || item.color) {
-  detalles = ' (';
-  if (item.talle) detalles += `Talle ${item.talle}`;
-  if (item.talle && item.color) detalles += ' • ';
-  if (item.color) {
-    const colorObj = cat?.colors?.find(c => c.value === item.color);
-    detalles += `Color ${colorObj?.label || item.color}`;
-  }
-  detalles += ')';
-}
+        let detalles = '';
+        if (item.talle || item.color) {
+          detalles = ' (';
+          if (item.talle) detalles += `Talle ${item.talle}`;
+          if (item.talle && item.color) detalles += ' • ';
+          if (item.color) {
+            const colorObj = (cat?.standardColors || cat?.ranglanColors || []).find(c => c.value === item.color);
+            detalles += `Color ${colorObj?.label || item.color}`;
+          }
+          detalles += ')';
+        }
 
-message += `• *${item.productName}* × ${item.qty}${extras}${detalles}${imageNote}\n  _${item.catName} › ${item.subName}_\n\n`;
+        message += `• *${item.productName}* × ${item.qty}${extras}${detalles}${imageNote}\n  _${item.catName} › ${item.subName}_\n\n`;
       });
 
       const total = calculateTotal();
@@ -945,34 +933,34 @@ message += `• *${item.productName}* × ${item.qty}${extras}${detalles}${imageN
         handleImageUpload(key, file);
         e.target.value = '';
       }
+
       if (e.target.classList.contains('talle-select') || e.target.classList.contains('color-select')) {
-  const key = e.target.dataset.key;
-  const value = e.target.value;
+        const key = e.target.dataset.key;
+        const value = e.target.value;
 
-  if (!cart[key]) {
-    const [catId, subName, prodName] = key.split('|');
-    cart[key] = { 
-      qty: 1, 
-      extras: new Set(), 
-      image: null, 
-      talle: '', 
-      color: '', 
-      catName: CATEGORIES.find(c => c.id === catId)?.name || '', 
-      subName, 
-      productName: prodName 
-    };
-    // Actualizamos qty visual si era 0
-    document.querySelectorAll(`[data-qty-display="${key}"]`).forEach(d => d.textContent = '1');
-  }
+        if (!cart[key]) {
+          const [catId, subName, prodName] = key.split('|');
+          cart[key] = { 
+            qty: 1, 
+            extras: new Set(), 
+            image: null, 
+            talle: '', 
+            color: '', 
+            catName: CATEGORIES.find(c => c.id === catId)?.name || '', 
+            subName, 
+            productName: prodName 
+          };
+          document.querySelectorAll(`[data-qty-display="${key}"]`).forEach(d => d.textContent = '1');
+        }
 
-  if (e.target.classList.contains('talle-select')) {
-    cart[key].talle = value;
-  } else if (e.target.classList.contains('color-select')) {
-    cart[key].color = value;
-  }
+        if (e.target.classList.contains('talle-select')) {
+          cart[key].talle = value;
+        } else if (e.target.classList.contains('color-select')) {
+          cart[key].color = value;
+        }
 
-  updateCartUI();
-}
+        updateCartUI();
+      }
     });
 
     // ==================== INICIO ====================
