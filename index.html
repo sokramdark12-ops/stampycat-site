@@ -253,20 +253,25 @@
           { name: 'Botellas', products: ['Botella hoppy','Botella Hoppy con aluminio','Termo estilo lata'] },
           { name: 'Jarros', products: ['Jarro chopp polímero','Jarra chopp cervecero','Jarro térmico con tapa','Jarro tipo Cantimplora'] }
         ] },
-      { id: 'remeras', name: 'Remeras', icon: '👕', gradient: 'from-purple-400 to-violet-500',
-        extras: [{ id: 'extra-estampado', label: 'Estampado adicional (espalda/manga/frente) — solo algodón', perProduct: true }],
-         availableOptions: {
-      talles: ['2', '4', '6', '8', '10', '12', 'S', 'M', 'L', 'XL', 'XXL', '3XL'],
-      colores: [
-        { value: 'blanco', label: 'Blanco', hex: '#ffffff' },
-        { value: 'negro',  label: 'Negro',  hex: '#000000' },
-        { value: 'gris',   label: 'Gris',   hex: '#808080' },
-        { value: 'rojo',   label: 'Rojo',   hex: '#dc2626' },
-        { value: 'azul',   label: 'Azul',   hex: '#2563eb' },
-        { value: 'verde',  label: 'Verde',  hex: '#16a34a' },
-        // podés agregar muchos más...
-      ]
-    },
+     { 
+  id: 'remeras', 
+  name: 'Remeras', 
+  icon: '👕', 
+  gradient: 'from-purple-400 to-violet-500',
+  extras: [{ id: 'extra-estampado', label: 'Estampado adicional (espalda/manga/frente) — solo algodón', perProduct: true }],
+  
+  // ←─────── NUEVO ────────
+  sizes: ['2', '4', '6', '8', '10', '12', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL'],
+  colors: [
+    { value: 'blanco',  label: 'Blanco',  hex: '#ffffff' },
+    { value: 'negro',   label: 'Negro',   hex: '#000000' },
+    { value: 'gris',    label: 'Gris',    hex: '#9ca3af' },
+    { value: 'rojo',    label: 'Rojo',    hex: '#ef4444' },
+    { value: 'azul',    label: 'Azul',    hex: '#3b82f6' },
+    { value: 'verde',   label: 'Verde',   hex: '#22c55e' },
+    { value: 'rosa',    label: 'Rosa',    hex: '#ec4899' },
+    { value: 'amarillo',label: 'Amarillo',hex: '#eab308' },
+  ],
         subcategories: [
           { name: 'Remeras Niños', products: ['Remera algodón','Remera poliéster','Remera ranglan'] },
           { name: 'Remeras Adultos', products: ['Remera algodón','Remera poliéster','Remera ranglan'] }
@@ -527,6 +532,24 @@
               <div class="flex-1 min-w-0">
                 <p class="font-semibold text-gray-700 text-sm truncate">${prod}</p>
                 ${extrasHTML}
+                <!-- Solo mostramos talles y colores si es remera -->
+${cat.id === 'remeras' ? `
+  <div class="mt-2 grid grid-cols-2 gap-2 text-xs">
+    <div>
+      <label class="block text-gray-600 mb-1">Talle</label>
+      <select class="talle-select w-full border border-gray-300 rounded px-2 py-1" data-key="${key}">
+        <option value="">Elegir talle</option>
+        ${cat.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}
+      </select>
+    </div>
+    <div>
+      <label class="block text-gray-600 mb-1">Color</label>
+      <select class="color-select w-full border border-gray-300 rounded px-2 py-1" data-key="${key}">
+        <option value="">Elegir color</option>
+        ${cat.colors.map(c => `<option value="${c.value}">${c.label}</option>`).join('')}
+      </select>
+    </div>
+  </div>
               </div>
               <div class="flex items-center gap-1 shrink-0">
                 <button class="qty-btn w-8 h-8 rounded-full bg-pink-100 text-pink-600 font-bold flex items-center justify-center hover:bg-pink-200 text-sm" data-action="dec" data-key="${key}">−</button>
@@ -670,6 +693,13 @@
               <p class="font-semibold text-gray-700 text-sm truncate">${item.productName}</p>
               <p class="text-xs text-gray-400">${item.catName} › ${item.subName}</p>
               ${extrasText}
+              ${item.talle || item.color ? `
+  <p class="text-xs text-purple-600 mt-0.5">
+    ${item.talle ? `Talle: <strong>${item.talle}</strong>` : ''}
+    ${item.talle && item.color ? ' • ' : ''}
+    ${item.color ? `Color: <strong>${cat?.colors?.find(c => c.value === item.color)?.label || item.color}</strong>` : ''}
+  </p>
+` : ''}
               ${item.image ? '<p class="text-xs text-purple-500 mt-0.5">📸 Con referencia</p>' : ''}
             </div>
           </div>
@@ -735,7 +765,19 @@
           if (names.length) extras = ` _(${names.join(', ')})_`;
         }
         const imageNote = item.image ? ' 📸 _[con referencia adjunta]_' : '';
-        message += `• *${item.productName}* × ${item.qty}${extras}${imageNote}\n  _${item.catName} › ${item.subName}_\n\n`;
+       let detalles = '';
+if (item.talle || item.color) {
+  detalles = ' (';
+  if (item.talle) detalles += `Talle ${item.talle}`;
+  if (item.talle && item.color) detalles += ' • ';
+  if (item.color) {
+    const colorObj = cat?.colors?.find(c => c.value === item.color);
+    detalles += `Color ${colorObj?.label || item.color}`;
+  }
+  detalles += ')';
+}
+
+message += `• *${item.productName}* × ${item.qty}${extras}${detalles}${imageNote}\n  _${item.catName} › ${item.subName}_\n\n`;
       });
 
       const total = calculateTotal();
@@ -821,6 +863,34 @@
         handleImageUpload(key, file);
         e.target.value = '';
       }
+      if (e.target.classList.contains('talle-select') || e.target.classList.contains('color-select')) {
+  const key = e.target.dataset.key;
+  const value = e.target.value;
+
+  if (!cart[key]) {
+    const [catId, subName, prodName] = key.split('|');
+    cart[key] = { 
+      qty: 1, 
+      extras: new Set(), 
+      image: null, 
+      talle: '', 
+      color: '', 
+      catName: CATEGORIES.find(c => c.id === catId)?.name || '', 
+      subName, 
+      productName: prodName 
+    };
+    // Actualizamos qty visual si era 0
+    document.querySelectorAll(`[data-qty-display="${key}"]`).forEach(d => d.textContent = '1');
+  }
+
+  if (e.target.classList.contains('talle-select')) {
+    cart[key].talle = value;
+  } else if (e.target.classList.contains('color-select')) {
+    cart[key].color = value;
+  }
+
+  updateCartUI();
+}
     });
 
     // ==================== INICIO ====================
