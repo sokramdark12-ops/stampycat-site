@@ -255,6 +255,18 @@
         ] },
       { id: 'remeras', name: 'Remeras', icon: '👕', gradient: 'from-purple-400 to-violet-500',
         extras: [{ id: 'extra-estampado', label: 'Estampado adicional (espalda/manga/frente) — solo algodón', perProduct: true }],
+         availableOptions: {
+      talles: ['2', '4', '6', '8', '10', '12', 'S', 'M', 'L', 'XL', 'XXL', '3XL'],
+      colores: [
+        { value: 'blanco', label: 'Blanco', hex: '#ffffff' },
+        { value: 'negro',  label: 'Negro',  hex: '#000000' },
+        { value: 'gris',   label: 'Gris',   hex: '#808080' },
+        { value: 'rojo',   label: 'Rojo',   hex: '#dc2626' },
+        { value: 'azul',   label: 'Azul',   hex: '#2563eb' },
+        { value: 'verde',  label: 'Verde',  hex: '#16a34a' },
+        // podés agregar muchos más...
+      ]
+    },
         subcategories: [
           { name: 'Remeras Niños', products: ['Remera algodón','Remera poliéster','Remera ranglan'] },
           { name: 'Remeras Adultos', products: ['Remera algodón','Remera poliéster','Remera ranglan'] }
