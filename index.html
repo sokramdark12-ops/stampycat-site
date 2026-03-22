@@ -253,29 +253,32 @@
           { name: 'Botellas', products: ['Botella hoppy','Botella Hoppy con aluminio','Termo estilo lata'] },
           { name: 'Jarros', products: ['Jarro chopp polímero','Jarra chopp cervecero','Jarro térmico con tapa','Jarro tipo Cantimplora'] }
         ] },
-     { 
+    { 
   id: 'remeras', 
   name: 'Remeras', 
   icon: '👕', 
   gradient: 'from-purple-400 to-violet-500',
   extras: [{ id: 'extra-estampado', label: 'Estampado adicional (espalda/manga/frente) — solo algodón', perProduct: true }],
-  
-  // ←─────── NUEVO ────────
-  sizes: ['2', '4', '6', '8', '10', '12', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL'],
+  sizes: ['2','4','6','8','10','12','14','S','M','L','XL','XXL','3XL','4XL','5XL'],
   colors: [
-    { value: 'blanco',  label: 'Blanco',  hex: '#ffffff' },
-    { value: 'negro',   label: 'Negro',   hex: '#000000' },
-    { value: 'gris',    label: 'Gris',    hex: '#9ca3af' },
-    { value: 'rojo',    label: 'Rojo',    hex: '#ef4444' },
-    { value: 'azul',    label: 'Azul',    hex: '#3b82f6' },
-    { value: 'verde',   label: 'Verde',   hex: '#22c55e' },
-    { value: 'rosa',    label: 'Rosa',    hex: '#ec4899' },
-    { value: 'amarillo',label: 'Amarillo',hex: '#eab308' },
+    { value: 'blanco',   label: 'Blanco',   hex: '#ffffff' },
+    { value: 'negro',    label: 'Negro',    hex: '#000000' },
+    { value: 'gris_claro', label: 'Gris claro', hex: '#d1d5db' },
+    { value: 'gris_oscuro', label: 'Gris oscuro', hex: '#4b5563' },
+    { value: 'rojo',     label: 'Rojo',     hex: '#ef4444' },
+    { value: 'azul',     label: 'Azul',     hex: '#3b82f6' },
+    { value: 'celeste',  label: 'Celeste',  hex: '#60a5fa' },
+    { value: 'verde',    label: 'Verde',    hex: '#22c55e' },
+    { value: 'rosa',     label: 'Rosa',     hex: '#ec4899' },
+    { value: 'amarillo', label: 'Amarillo', hex: '#eab308' },
+    { value: 'naranja',  label: 'Naranja',  hex: '#f97316' },
+    { value: 'beige',    label: 'Beige',    hex: '#d2b48c' }
   ],
-        subcategories: [
-          { name: 'Remeras Niños', products: ['Remera algodón','Remera poliéster','Remera ranglan'] },
-          { name: 'Remeras Adultos', products: ['Remera algodón','Remera poliéster','Remera ranglan'] }
-        ] },
+  subcategories: [
+    { name: 'Remeras Niños', products: ['Remera algodón','Remera poliéster','Remera ranglan'] },
+    { name: 'Remeras Adultos', products: ['Remera algodón','Remera poliéster','Remera ranglan'] }
+  ] 
+},
       { id: 'buzos-camperas', name: 'Buzos y Camperas', icon: '🧥', gradient: 'from-emerald-400 to-teal-500',
         subcategories: [
           { name: 'Niños', products: ['Buzo canguro','Buzo cuello redondo'] },
