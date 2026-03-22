@@ -253,7 +253,7 @@
           { name: 'Botellas', products: ['Botella hoppy','Botella Hoppy con aluminio','Termo estilo lata'] },
           { name: 'Jarros', products: ['Jarro chopp polímero','Jarra chopp cervecero','Jarro térmico con tapa','Jarro tipo Cantimplora'] }
         ] },
-    { 
+   { 
   id: 'remeras', 
   name: 'Remeras', 
   icon: '👕', 
@@ -262,50 +262,53 @@
     { id: 'extra-estampado', label: 'Estampado adicional (espalda/manga/frente) — solo algodón', perProduct: true }
   ],
 
-  // Colores disponibles (para remeras de algodón / ranglan)
-  colors: [
-    { value: 'blanco',        label: 'Blanco',         hex: '#ffffff' },
-    { value: 'negro',         label: 'Negro',          hex: '#000000' },
-    { value: 'azul_marino',   label: 'Azul marino',    hex: '#1e3a8a' },
-    { value: 'azul_francia',  label: 'Azul francia',   hex: '#2563eb' },
-    { value: 'celeste',       label: 'Celeste',        hex: '#60a5fa' },
-    { value: 'celeste_pastel',label: 'Celeste pastel', hex: '#a5d8ff' },
-    { value: 'verde_oliva',   label: 'Verde oliva',    hex: '#6b7280' },
-    { value: 'verde_militar', label: 'Verde militar',  hex: '#4b5320' },
-    { value: 'verde_manzana', label: 'Verde manzana',  hex: '#86efac' },
-    { value: 'verde_pastel',  label: 'Verde pastel',   hex: '#bbf7d0' },
-    { value: 'rojo',          label: 'Rojo',           hex: '#ef4444' },
-    { value: 'bordo',         label: 'Bordo',          hex: '#7f1d1d' },
-    { value: 'rosa',          label: 'Rosa',           hex: '#ec4899' },
-    { value: 'violeta',       label: 'Violeta',        hex: '#a855f7' },
-    { value: 'lila',          label: 'Lila',           hex: '#c084fc' },
-    { value: 'amarillo',      label: 'Amarillo',       hex: '#eab308' },
-    { value: 'amarillo_pastel',label: 'Amarillo pastel',hex: '#fef08a' },
-    { value: 'naranja',       label: 'Naranja',        hex: '#f97316' },
-    { value: 'melange',       label: 'Melange',        hex: '#9ca3af' }   // grisáceo típico melange
+  // Colores estándar (para algodón y poliéster)
+  standardColors: [
+    { value: 'blanco',         label: 'Blanco',          hex: '#ffffff' },
+    { value: 'negro',          label: 'Negro',           hex: '#000000' },
+    { value: 'azul_marino',    label: 'Azul marino',     hex: '#1e3a8a' },
+    { value: 'azul_francia',   label: 'Azul francia',    hex: '#2563eb' },
+    { value: 'celeste',        label: 'Celeste',         hex: '#60a5fa' },
+    { value: 'celeste_pastel', label: 'Celeste pastel',  hex: '#a5d8ff' },
+    { value: 'verde_oliva',    label: 'Verde oliva',     hex: '#6b7280' },
+    { value: 'verde_militar',  label: 'Verde militar',   hex: '#4b5320' },
+    { value: 'verde_manzana',  label: 'Verde manzana',   hex: '#86efac' },
+    { value: 'verde_pastel',   label: 'Verde pastel',    hex: '#bbf7d0' },
+    { value: 'rojo',           label: 'Rojo',            hex: '#ef4444' },
+    { value: 'bordo',          label: 'Bordo',           hex: '#7f1d1d' },
+    { value: 'rosa',           label: 'Rosa',            hex: '#ec4899' },
+    { value: 'violeta',        label: 'Violeta',         hex: '#a855f7' },
+    { value: 'lila',           label: 'Lila',            hex: '#c084fc' },
+    { value: 'amarillo',       label: 'Amarillo',        hex: '#eab308' },
+    { value: 'amarillo_pastel',label: 'Amarillo pastel', hex: '#fef08a' },
+    { value: 'naranja',        label: 'Naranja',         hex: '#f97316' },
+    { value: 'melange',        label: 'Melange',         hex: '#9ca3af' }
   ],
 
-  // Talleres por tipo de público
+  // Colores EXCLUSIVOS para ranglan
+  ranglanColors: [
+    { value: 'blanco_negro',        label: 'Blanco c/ negro',         hex: '#ffffff' /* fondo blanco, mangas negras */ },
+    { value: 'blanco_verde',        label: 'Blanco c/ verde',         hex: '#ffffff' },
+    { value: 'blanco_azulmarino',   label: 'Blanco c/ azul marino',   hex: '#ffffff' },
+    { value: 'blanco_azulfrancia',  label: 'Blanco c/ azul Francia',  hex: '#ffffff' },
+    { value: 'blanco_amarillo',     label: 'Blanco c/ amarillo',      hex: '#ffffff' },
+    { value: 'blanco_naranja',      label: 'Blanco c/ Naranja',       hex: '#ffffff' },
+    { value: 'melange_negro',       label: 'Gris melange c/ Negro',   hex: '#9ca3af' /* fondo melange, mangas negras */ },
+    { value: 'blanco_celeste',      label: 'Blanco c/ celeste',       hex: '#ffffff' }
+  ],
+
+  // Talleres (sin cambios respecto a lo anterior)
   sizes: {
-    ninos:  ['4', '6', '8', '10', '12', '14', '16'],
+    ninos: ['4','6','8','10','12','14','16'],
     adultos: {
-      comunes:   ['1', '2', '3', '4', '5'],
-      especiales: ['6', '7', '8', '9', '10']   // con recargo
+      comunes: ['1','2','3','4','5'],
+      especiales: ['6','7','8','9','10']
     }
   },
 
-  // Mensaje cuando no hay selector de color
-  polyesterColorMessage: 'Colores bajo consulta de stock y disponibilidad. Escribinos para confirmar.',
-
   subcategories: [
-    { 
-      name: 'Remeras Niños', 
-      products: ['Remera algodón','Remera poliéster','Remera ranglan'] 
-    },
-    { 
-      name: 'Remeras Adultos', 
-      products: ['Remera algodón','Remera poliéster','Remera ranglan'] 
-    }
+    { name: 'Remeras Niños',   products: ['Remera algodón','Remera poliéster','Remera ranglan'] },
+    { name: 'Remeras Adultos', products: ['Remera algodón','Remera poliéster','Remera ranglan'] }
   ] 
 },
       { id: 'buzos-camperas', name: 'Buzos y Camperas', icon: '🧥', gradient: 'from-emerald-400 to-teal-500',
@@ -560,11 +563,12 @@
   }
 
   // ────────────────────────────────────────────────────────────────
-  // LÓGICA PARA TALLE Y COLOR SEGÚN REGLAS
+  // LÓGICA PARA TALLE Y COLOR SEGÚN TIPO DE REMERA
   // ────────────────────────────────────────────────────────────────
 
   const esPoliester = prod.toLowerCase().includes('poliéster') || prod.toLowerCase().includes('poliester');
-  const esNinos = sub.name.toLowerCase().includes('niñ') || sub.name.toLowerCase().includes('nino');
+  const esRanglan  = prod.toLowerCase().includes('ranglan');
+  const esNinos    = sub.name.toLowerCase().includes('niñ') || sub.name.toLowerCase().includes('nino');
 
   // Talleres
   let tallesHTML = '';
@@ -584,26 +588,28 @@
     `;
   }
 
-  // Color o mensaje para poliéster
-  let colorFieldHTML = '';
-  if (esPoliester) {
-    colorFieldHTML = `
-      <div class="mt-1 text-xs text-amber-800 bg-amber-50/80 p-2.5 rounded border border-amber-200">
-        <strong>Colores bajo consulta de stock y disponibilidad</strong><br>
-        Escribinos por WhatsApp para confirmar opciones disponibles.
-      </div>
-    `;
-  } else {
-    colorFieldHTML = `
-      <div>
-        <label class="block text-gray-600 font-medium mb-1">Color</label>
-        <select class="color-select w-full border border-gray-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-400" data-key="${key}">
-          <option value="">Elegir color</option>
-          ${cat.colors.map(c => `<option value="${c.value}">${c.label}</option>`).join('')}
-        </select>
-      </div>
-    `;
+  // Colores según tipo de remera
+  let colorOptions = cat.standardColors;
+  let colorLabel = 'Color';
+
+  if (esRanglan) {
+    colorOptions = cat.ranglanColors;
+    colorLabel = 'Combinación de colores';
   }
+
+  const colorOptionsHTML = colorOptions.map(c => 
+    `<option value="${c.value}">${c.label}</option>`
+  ).join('');
+
+  const colorFieldHTML = `
+    <div>
+      <label class="block text-gray-600 font-medium mb-1">${colorLabel}</label>
+      <select class="color-select w-full border border-gray-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-400" data-key="${key}">
+        <option value="">Elegir ${colorLabel.toLowerCase()}</option>
+        ${colorOptionsHTML}
+      </select>
+    </div>
+  `;
 
   // ────────────────────────────────────────────────────────────────
 
