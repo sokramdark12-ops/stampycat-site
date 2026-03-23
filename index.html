@@ -857,7 +857,7 @@ async function solicitarPresupuesto() {
         const blob = await fetch(item.image).then(r => r.blob());
         const formData = new FormData();
         formData.append('image', blob, `referencia-${prodName.replace(/\s+/g, '-').replace(/[^a-z0-9-]/gi, '')}.jpg`);
-        formData.append('key', 'TU_API_KEY_DE_IMGBB_AQUI');  // ← reemplaza con tu clave real
+        formData.append('key', 'f92aad4a393f34eb622dc4d842ee9f49');  // ← reemplaza con tu clave real
 
         const res = await fetch('https://api.imgbb.com/1/upload', {
           method: 'POST',
