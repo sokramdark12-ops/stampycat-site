@@ -150,6 +150,7 @@
 
   <style>body { box-sizing: border-box; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body class="h-full font-body">
 
@@ -343,6 +344,8 @@
     let cart = {};
     let activeCategoryId = null;
     let prices = {};
+    // ==================== EMAILJS ====================
+emailjs.init("pWJIv7oWGsu_PHFCO");   // ← REEMPLAZA con tu Public Key
 
     // ==================== CONFIG ====================
     const defaultConfig = {
@@ -823,43 +826,56 @@
       updateCartUI();
     }
 
-    // ==================== WHATSAPP ====================
-    function sendWhatsApp() {
-      const items = Object.entries(cart).filter(([,i]) => i.qty > 0);
-      if (items.length === 0) return;
+    // ==================== EMAILJS - ENVIAR PRESUPUESTO ====================
+async function enviarPorEmail() {
+  const items = Object.entries(cart).filter(([, i]) => i.qty > 0);
+  if (items.length === 0) return showToast('❌ El carrito está vacío');
 
-      let message = ' *STAMPYCAT - Solicitud de Presupuesto*\n\nHola! Me gustaría consultar por:\n\n';
-      items.forEach(([key, item]) => {
-        const cat = CATEGORIES.find(c => c.id === key.split('|')[0]);
-        let extras = '';
-        if (item.extras.size > 0 && cat?.extras) {
-          const names = cat.extras.filter(e => item.extras.has(e.id)).map(e => e.label);
-          if (names.length) extras = ` _(${names.join(', ')})_`;
-        }
-        const imageNote = item.image ? '  _[con referencia adjunta]_' : '';
-        let detalles = '';
-        if (item.talle || item.color) {
-          detalles = ' (';
-          if (item.talle) detalles += `Talle ${item.talle}`;
-          if (item.talle && item.color) detalles += ' • ';
-          if (item.color) {
-            const colorObj = (cat?.standardColors || cat?.ranglanColors || []).find(c => c.value === item.color);
-            detalles += `Color ${colorObj?.label || item.color}`;
-          }
-          detalles += ')';
-        }
+  let mensaje = '🐱 STAMPYCAT - Solicitud de Presupuesto\n\n';
+  let totalItems = 0;
+  const total = calculateTotal();
 
-        message += `• *${item.productName}* × ${item.qty}${extras}${detalles}${imageNote}\n  _${item.catName} › ${item.subName}_\n\n`;
-      });
-
-      const total = calculateTotal();
-      if (total > 0) message += `*Total estimado*: $${total.toLocaleString('es-AR')}\n\n`;
-      message += '¡Gracias! ';
-
-      const phone = '5491173617819';
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-      window.open(url, '_blank');
+  items.forEach(([key, item]) => {
+    totalItems++;
+    const cat = CATEGORIES.find(c => c.id === key.split('|')[0]);
+    let extras = item.extras.size > 0 ? ` (${Array.from(item.extras).join(', ')})` : '';
+    let detalles = '';
+    if (item.talle || item.color) {
+      detalles = ` (${item.talle ? 'Talle ' + item.talle : ''}${item.color ? ' • Color ' + item.color : ''})`;
     }
+    mensaje += `• ${item.productName} × ${item.qty}${extras}${detalles}\n  ${item.catName} › ${item.subName}\n\n`;
+  });
+
+  mensaje += `Total estimado: $${total.toLocaleString('es-AR')}\n\n¡Gracias! 😊`;
+
+  const templateParams = {
+    mensaje_pedido: mensaje,
+    total_items: totalItems,
+    total: total.toLocaleString('es-AR')
+  };
+
+  try {
+    await emailjs.send(
+      "service_ykyd78q",     // ← reemplaza
+      "template_lwclxwu",    // ← reemplaza
+      templateParams
+    );
+
+    showToast('✅ Presupuesto enviado por correo automáticamente');
+    
+    // Opcional: vaciar carrito después de enviar
+    // cart = {}; updateCartUI();
+
+  } catch (error) {
+    console.error(error);
+    showToast('❌ Error al enviar correo. Probá de nuevo o usa WhatsApp');
+    
+    // Fallback a WhatsApp si falla
+    const phone = '5491173617819';
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+  }
+}
 
     // ==================== TOAST ====================
     function showToast(msg) {
@@ -907,9 +923,9 @@
       }
 
       if (e.target.closest('#whatsapp-btn')) {
-        sendWhatsApp();
-        return;
-      }
+  enviarPorEmail();     // ← ahora llama a EmailJS
+  return;
+}
 
       if (e.target.closest('#floating-cart-btn')) {
         document.getElementById('cart-section')?.scrollIntoView({ behavior: 'smooth' });
