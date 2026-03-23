@@ -826,42 +826,112 @@
     }
 
     // ==================== WHATSAPP ====================
-    function sendWhatsApp() {
-      const items = Object.entries(cart).filter(([,i]) => i.qty > 0);
-      if (items.length === 0) return;
+    async function sendWhatsApp() {
+  const items = Object.entries(cart).filter(([, i]) => i.qty > 0);
+  if (items.length === 0) return;
 
-      let message = '🐱 *STAMPYCAT - Solicitud de Presupuesto*\n\nHola! Me gustaría consultar por:\n\n';
-      items.forEach(([key, item]) => {
-        const cat = CATEGORIES.find(c => c.id === key.split('|')[0]);
-        let extras = '';
-        if (item.extras.size > 0 && cat?.extras) {
-          const names = cat.extras.filter(e => item.extras.has(e.id)).map(e => e.label);
-          if (names.length) extras = ` _(${names.join(', ')})_`;
-        }
-        const imageNote = item.image ? ' 📸 _[con referencia adjunta]_' : '';
-        let detalles = '';
-        if (item.talle || item.color) {
-          detalles = ' (';
-          if (item.talle) detalles += `Talle ${item.talle}`;
-          if (item.talle && item.color) detalles += ' • ';
-          if (item.color) {
-            const colorObj = (cat?.standardColors || cat?.ranglanColors || []).find(c => c.value === item.color);
-            detalles += `Color ${colorObj?.label || item.color}`;
-          }
-          detalles += ')';
-        }
+  // Construimos el mensaje (igual que antes)
+  let message = '🐱 *STAMPYCAT - Solicitud de Presupuesto*\n\nHola! Me gustaría consultar por:\n\n';
 
-        message += `• *${item.productName}* × ${item.qty}${extras}${detalles}${imageNote}\n  _${item.catName} › ${item.subName}_\n\n`;
-      });
+  let hayImagenes = false;
+  const files = []; // ← aquí guardaremos los File para compartir
 
-      const total = calculateTotal();
-      if (total > 0) message += `*Total estimado*: $${total.toLocaleString('es-AR')}\n\n`;
-      message += '¡Gracias! 😊';
-
-      const phone = '5491173617819';
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-      window.open(url, '_blank');
+  items.forEach(([key, item]) => {
+    const cat = CATEGORIES.find(c => c.id === key.split('|')[0]);
+    let extras = '';
+    if (item.extras.size > 0 && cat?.extras) {
+      const names = cat.extras.filter(e => item.extras.has(e.id)).map(e => e.label);
+      if (names.length) extras = ` _(${names.join(', ')})_`;
     }
+    const imageNote = item.image ? ' 📸 (referencia adjunta)' : '';
+    let detalles = '';
+    if (item.talle || item.color) {
+      detalles = ' (';
+      if (item.talle) detalles += `Talle ${item.talle}`;
+      if (item.talle && item.color) detalles += ' • ';
+      if (item.color) {
+        const colorObj = (cat?.standardColors || cat?.ranglanColors || []).find(c => c.value === item.color);
+        detalles += `Color ${colorObj?.label || item.color}`;
+      }
+      detalles += ')';
+    }
+
+    message += `• *${item.productName}* × ${item.qty}${extras}${detalles}${imageNote}\n  _${item.catName} › ${item.subName}_\n\n`;
+
+    // Si hay imagen → la convertimos a File
+    if (item.image) {
+      hayImagenes = true;
+      try {
+        const blob = await (await fetch(item.image)).blob();
+        const fileName = `referencia-${key.replace(/\|/g, '-')}.jpg`;
+        const file = new File([blob], fileName, { type: blob.type || 'image/jpeg' });
+        files.push(file);
+      } catch (err) {
+        console.warn('No se pudo crear File de la imagen', key, err);
+      }
+    }
+  });
+
+  const total = calculateTotal();
+  if (total > 0) message += `*Total estimado*: $${total.toLocaleString('es-AR')}\n\n`;
+
+  if (hayImagenes) {
+    message += 'Adjunto las imágenes de referencia de los productos marcados con 📸\n';
+  }
+
+  message += '¡Gracias! 😊';
+
+  const phone = '5491173617819';
+  const waText = encodeURIComponent(message);
+  const fallbackUrl = `https://wa.me/${phone}?text=${waText}`;
+
+  // ────────────────────────────────────────────────
+  //  Intentamos Web Share (mejor experiencia en móvil)
+  // ────────────────────────────────────────────────
+  if (navigator.share && navigator.canShare) {
+    const shareData = {
+      title: 'Presupuesto StampyCat',
+      text: message,
+      url: window.location.href,     // opcional, pero a veces ayuda
+    };
+
+    if (files.length > 0) {
+      shareData.files = files;
+    }
+
+    // Verificamos si el navegador permite compartir exactamente esto
+    if (navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+        // Si llega acá → el usuario ya compartió (o canceló)
+        // No hacemos nada más, el sistema se encarga
+        showToast('¡Enviado al diálogo de compartir! Elige WhatsApp 😺');
+        return; // ← terminamos la función con éxito
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          // El usuario canceló el diálogo → no mostramos error
+          return;
+        }
+        console.warn('navigator.share falló:', err);
+        showToast('No pudimos abrir el compartir automáticamente 😿');
+      }
+    } else {
+      console.log('El navegador no permite compartir este contenido (quizás por files + text)');
+    }
+  }
+
+  // ────────────────────────────────────────────────
+  //  Fallback: solo texto por wa.me
+  // ────────────────────────────────────────────────
+  if (hayImagenes) {
+    message += '\n⚠️ *No pude adjuntar las fotos automáticamente.*\n' +
+               'Por favor adjuntalas manualmente justo después de enviar este mensaje.\n' +
+               '¡Gracias por la paciencia! 🐾\n\n';
+  }
+
+  const finalUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  window.open(finalUrl, '_blank');
+}
 
     // ==================== TOAST ====================
     function showToast(msg) {
@@ -909,8 +979,8 @@
       }
 
       if (e.target.closest('#whatsapp-btn')) {
-        sendWhatsApp();
-        return;
+  sendWhatsApp();   // ya es async, pero no await porque no necesitamos esperar
+  return;
       }
 
       if (e.target.closest('#floating-cart-btn')) {
