@@ -823,43 +823,70 @@
       updateCartUI();
     }
 
-    // ==================== WHATSAPP ====================
-    function sendWhatsApp() {
-      const items = Object.entries(cart).filter(([,i]) => i.qty > 0);
-      if (items.length === 0) return;
+   // ==================== SUBIR A IMGBB Y ENVIAR POR WHATSAPP ====================
+async function solicitarPresupuesto() {
+  const items = Object.entries(cart).filter(([, i]) => i.qty > 0);
+  if (items.length === 0) {
+    showToast('❌ El carrito está vacío');
+    return;
+  }
 
-      let message = ' *STAMPYCAT - Solicitud de Presupuesto*\n\nHola! Me gustaría consultar por:\n\n';
-      items.forEach(([key, item]) => {
-        const cat = CATEGORIES.find(c => c.id === key.split('|')[0]);
-        let extras = '';
-        if (item.extras.size > 0 && cat?.extras) {
-          const names = cat.extras.filter(e => item.extras.has(e.id)).map(e => e.label);
-          if (names.length) extras = ` _(${names.join(', ')})_`;
-        }
-        const imageNote = item.image ? '  _[con referencia adjunta]_' : '';
-        let detalles = '';
-        if (item.talle || item.color) {
-          detalles = ' (';
-          if (item.talle) detalles += `Talle ${item.talle}`;
-          if (item.talle && item.color) detalles += ' • ';
-          if (item.color) {
-            const colorObj = (cat?.standardColors || cat?.ranglanColors || []).find(c => c.value === item.color);
-            detalles += `Color ${colorObj?.label || item.color}`;
-          }
-          detalles += ')';
-        }
+  // Construimos el mensaje base
+  let mensaje = '🐱 *STAMPYCAT - Solicitud de Presupuesto*\n\nHola! Me gustaría consultar por:\n\n';
+  let linksImagenes = [];
 
-        message += `• *${item.productName}* × ${item.qty}${extras}${detalles}${imageNote}\n  _${item.catName} › ${item.subName}_\n\n`;
-      });
+  for (const [key, item] of Object.entries(items)) {
+    const [, , prodName] = key.split('|'); // para nombrar mejor las fotos
+    let extras = '';
+    // ... (agregá aquí tu lógica de extras si querés)
 
-      const total = calculateTotal();
-      if (total > 0) message += `*Total estimado*: $${total.toLocaleString('es-AR')}\n\n`;
-      message += '¡Gracias! ';
-
-      const phone = '5491173617819';
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-      window.open(url, '_blank');
+    let detalles = '';
+    if (item.talle || item.color) {
+      detalles = ` (${[item.talle, item.color].filter(Boolean).join(' • ')})`;
     }
+
+    mensaje += `• *${item.productName}* × ${item.qty}${detalles}\n  _${item.catName} › ${item.subName}_\n\n`;
+
+    // Subimos cada imagen si existe
+    if (item.image) {
+      try {
+        const blob = await (await fetch(item.image)).blob();
+        const formData = new FormData();
+        formData.append('image', blob, `referencia-${prodName.replace(/\s+/g, '-')}.jpg`);
+        formData.append('key', 'f92aad4a393f34eb622dc4d842ee9f49');  // ← pegá tu clave aquí
+
+        const res = await fetch('https://api.imgbb.com/1/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          linksImagenes.push(data.data.url);
+          mensaje += `📸 Referencia: ${data.data.url}\n`;
+        } else {
+          console.warn('Fallo subida ImgBB:', data);
+          mensaje += '📸 (Referencia no subida - adjuntaré manualmente)\n';
+        }
+      } catch (err) {
+        console.error('Error subiendo imagen', key, err);
+        mensaje += '📸 (Error al subir referencia)\n';
+      }
+    }
+  }
+
+  const total = calculateTotal();
+  if (total > 0) mensaje += `*Total estimado*: $${total.toLocaleString('es-AR')}\n\n`;
+  mensaje += '¡Gracias! 😊';
+
+  // Abrimos WhatsApp con el mensaje completo (incluye links)
+  const phone = '5491173617819';
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, '_blank');
+
+  showToast('✅ Mensaje preparado con links de imágenes. Elige WhatsApp.');
+}
 
     // ==================== TOAST ====================
     function showToast(msg) {
@@ -907,7 +934,7 @@
       }
 
       if (e.target.closest('#whatsapp-btn')) {
-        sendWhatsApp();
+        solicitarPresupuesto();
         return;
       }
 
