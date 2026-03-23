@@ -965,13 +965,43 @@
       }
     });
 
-    // ==================== INICIO ====================
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('Página lista → mostrando categorías');
-      renderCategories();
-      lucide.createIcons();
-      loadPrices();
-    });
+    // ==================== INICIO ROBUSTO ====================
+function initApp(attempt = 1) {
+  console.log(`Intento ${attempt} de mostrar categorías...`);
+
+  const grid = document.getElementById('category-grid');
+  
+  // Si no existe el elemento todavía → esperamos y reintentamos
+  if (!grid) {
+    if (attempt < 6) {  // máximo 6 intentos (~3 segundos)
+      setTimeout(() => initApp(attempt + 1), 500);
+    } else {
+      console.error('No se encontró #category-grid después de varios intentos');
+      showToast('⚠️ Error al cargar categorías. Recarga la página.');
+    }
+    return;
+  }
+
+  // Si ya tiene hijos → ya fue renderizado, no hacemos nada
+  if (grid.children.length > 0) {
+    console.log('Categorías ya están cargadas, salimos.');
+    return;
+  }
+
+  // ¡Aquí sí renderizamos!
+  console.log('Renderizando categorías ahora...');
+  renderCategories();
+  lucide.createIcons();
+  loadPrices();
+}
+
+// Lanzamos varios intentos para cubrir diferentes tiempos de carga
+initApp();                        // intento inmediato
+document.addEventListener('DOMContentLoaded', initApp);
+window.addEventListener('load', () => setTimeout(initApp, 800));
+setTimeout(initApp, 1500);        // respaldo ~1.5 s
+setTimeout(initApp, 3000);        // último recurso ~3 s
+    
   </script>
 </body>
 </html>
