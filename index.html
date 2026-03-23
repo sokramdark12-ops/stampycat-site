@@ -1038,12 +1038,31 @@
     });
 
     // ==================== INICIO ====================
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('Página lista → mostrando categorías');
-      renderCategories();
-      lucide.createIcons();
-      loadPrices();
-    });
+function initApp() {
+  console.log('Intentando inicializar app...');
+
+  const grid = document.getElementById('category-grid');
+  
+  if (!grid || grid.children.length > 0) {
+    // ya está renderizado o no existe → no hacemos nada
+    console.log('Grid ya existe o no se encontró → salimos');
+    return;
+  }
+
+  console.log('Renderizando categorías...');
+  renderCategories();
+  lucide.createIcons();
+  loadPrices();
+}
+
+// Intentamos inmediatamente (por si el DOM ya está listo)
+initApp();
+
+// Por si el SDK o algún script lo carga más tarde
+document.addEventListener('DOMContentLoaded', initApp);
+
+// Y un último intento después de 1.5 segundos (por si es muy lento)
+setTimeout(initApp, 1500);
   </script>
 </body>
 </html>
