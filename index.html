@@ -823,37 +823,41 @@
       updateCartUI();
     }
 
-   // ==================== SUBIR A IMGBB Y ENVIAR POR WHATSAPP ====================
+// ==================== SUBIR A IMGBB Y ENVIAR POR WHATSAPP ====================
 async function solicitarPresupuesto() {
-  const items = Object.entries(cart).filter(([, i]) => i.qty > 0);
+  const items = Object.entries(cart).filter(([, item]) => item.qty > 0);
   if (items.length === 0) {
     showToast('❌ El carrito está vacío');
     return;
   }
 
-  // Construimos el mensaje base
   let mensaje = '🐱 *STAMPYCAT - Solicitud de Presupuesto*\n\nHola! Me gustaría consultar por:\n\n';
-  let linksImagenes = [];
+  const linksImagenes = [];
 
-  for (const [key, item] of Object.entries(items)) {
-    const [, , prodName] = key.split('|'); // para nombrar mejor las fotos
+  // Procesamos cada ítem del carrito
+  for (const [key, item] of items) {
+    // key tiene formato: catId|subName|prodName
+    const [catId, subName, prodName] = key.split('|');
+
     let extras = '';
-    // ... (agregá aquí tu lógica de extras si querés)
+    if (item.extras && item.extras.size > 0) {
+      extras = ` (${Array.from(item.extras).join(', ')})`;
+    }
 
     let detalles = '';
     if (item.talle || item.color) {
-      detalles = ` (${[item.talle, item.color].filter(Boolean).join(' • ')})`;
+      detalles = ` (${[item.talle ? `Talle ${item.talle}` : '', item.color ? `Color ${item.color}` : ''].filter(Boolean).join(' • ')})`;
     }
 
-    mensaje += `• *${item.productName}* × ${item.qty}${detalles}\n  _${item.catName} › ${item.subName}_\n\n`;
+    mensaje += `• *${prodName}* × ${item.qty}${extras}${detalles}\n  _${item.catName || 'Categoría'} › ${subName || 'Subcategoría'}_\n\n`;
 
-    // Subimos cada imagen si existe
+    // Subir imagen si existe
     if (item.image) {
       try {
-        const blob = await (await fetch(item.image)).blob();
+        const blob = await fetch(item.image).then(r => r.blob());
         const formData = new FormData();
-        formData.append('image', blob, `referencia-${prodName.replace(/\s+/g, '-')}.jpg`);
-        formData.append('key', 'f92aad4a393f34eb622dc4d842ee9f49');  // ← pegá tu clave aquí
+        formData.append('image', blob, `referencia-${prodName.replace(/\s+/g, '-').replace(/[^a-z0-9-]/gi, '')}.jpg`);
+        formData.append('key', 'TU_API_KEY_DE_IMGBB_AQUI');  // ← reemplaza con tu clave real
 
         const res = await fetch('https://api.imgbb.com/1/upload', {
           method: 'POST',
@@ -862,32 +866,34 @@ async function solicitarPresupuesto() {
 
         const data = await res.json();
 
-        if (data.success) {
+        if (data.success && data.data?.url) {
           linksImagenes.push(data.data.url);
           mensaje += `📸 Referencia: ${data.data.url}\n`;
         } else {
           console.warn('Fallo subida ImgBB:', data);
-          mensaje += '📸 (Referencia no subida - adjuntaré manualmente)\n';
+          mensaje += `📸 Referencia no subida (error)\n`;
         }
       } catch (err) {
-        console.error('Error subiendo imagen', key, err);
-        mensaje += '📸 (Error al subir referencia)\n';
+        console.error('Error subiendo a ImgBB:', err);
+        mensaje += `📸 Referencia no subida (error técnico)\n`;
       }
     }
   }
 
   const total = calculateTotal();
-  if (total > 0) mensaje += `*Total estimado*: $${total.toLocaleString('es-AR')}\n\n`;
+  if (total > 0) {
+    mensaje += `*Total estimado*: $${total.toLocaleString('es-AR')}\n\n`;
+  }
+
   mensaje += '¡Gracias! 😊';
 
-  // Abrimos WhatsApp con el mensaje completo (incluye links)
+  // Abrir WhatsApp
   const phone = '5491173617819';
   const url = `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`;
   window.open(url, '_blank');
 
-  showToast('✅ Mensaje preparado con links de imágenes. Elige WhatsApp.');
+  showToast('✅ Mensaje preparado. Revisa WhatsApp (puede tardar unos segundos en subir las fotos)');
 }
-
     // ==================== TOAST ====================
     function showToast(msg) {
       const container = document.getElementById('toast-container');
