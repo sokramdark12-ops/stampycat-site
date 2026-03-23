@@ -150,6 +150,7 @@
 
   <style>body { box-sizing: border-box; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
 <body class="h-full font-body">
 
@@ -426,18 +427,45 @@
       });
     }
 
-    // ==================== CARGAR PRECIOS ====================
-    async function loadPrices() {
-      try {
-        const response = await fetch('./precios.json');
-        if (!response.ok) throw new Error('No se pudo cargar precios.json');
-        prices = await response.json();
-        console.log('Precios cargados correctamente');
-      } catch (err) {
-        console.warn('No se pudieron cargar los precios:', err.message);
-        showToast(' No se cargó precios.json (precios en $0)');
+    // ==================== CARGAR PRECIOS DESDE GOOGLE SHEET ====================
+async function loadPrices() {
+  try {
+    // ← PEGÁ AQUÍ TU URL DE LA HOJA
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1oAYQrzqAIixcAbqYgM6iL7U1pmmQ9PXA-Zwt2YW9eV4/export?format=csv&gid=0';
+
+    const response = await fetch(SHEET_URL);
+    if (!response.ok) throw new Error('No se pudo cargar la Google Sheet');
+
+    const csvText = await response.text();
+
+    // PapaParse maneja comas, comillas y acentos perfectamente
+    const parsed = Papa.parse(csvText, {
+      header: true,
+      skipEmptyLines: true,
+      dynamicTyping: true
+    });
+
+    prices = {};
+    parsed.data.forEach(row => {
+      const catId   = row.catId?.trim();
+      const subName = row.subName?.trim();
+      const prodName = row.prodName?.trim();
+      const price   = parseFloat(row.price) || 0;
+
+      if (catId && subName && prodName) {
+        if (!prices[catId]) prices[catId] = {};
+        if (!prices[catId][subName]) prices[catId][subName] = {};
+        prices[catId][subName][prodName] = price;
       }
-    }
+    });
+
+    console.log('✅ Precios cargados desde Google Sheet');
+  } catch (err) {
+    console.warn('Error al cargar Sheet:', err.message);
+    showToast('⚠️ No se cargó la Google Sheet (precios en $0)');
+    prices = {};
+  }
+}
 
     // ==================== CALCULAR TOTAL ====================
     function calculateTotal() {
