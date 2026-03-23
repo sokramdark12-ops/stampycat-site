@@ -248,13 +248,13 @@
     const CATEGORIES = [
       { id: 'tazas-mates', name: 'Tazas y Mates', icon: '☕', gradient: 'from-pink-400 to-rose-500',
         subcategories: [
-          { name: 'Tazas', products: ['Taza de polímero','Taza de cerámica','Taza de cerámica mágica','Taza mágica glitter','Vaso polímero tipo Starbucks'] },
-          { name: 'Mates', products: ['Mate de polímero','Set matero (Yerbero, azucarero y mate)','Set completo con termo','Termo','Matelisto'] }
+          { name: 'Tazas', products: ['Taza de polímero','Taza de cerámica','Taza de cerámica color interior','Taza de cerámica mágica','Taza de cerámica mágica corazón','Taza mágica glitter','Taza Polímero Cónica','Vaso polímero tipo Starbucks'] },
+          { name: 'Mates', products: ['Mate de polímero','Set matero (Yerbero y azucarero)','Set Completo (Yerbero, azucarero y mate)','Termo','Matelisto'] }
         ] },
       { id: 'botellas-jarros', name: 'Botellas y Jarros', icon: '🍶', gradient: 'from-blue-400 to-cyan-500',
         subcategories: [
           { name: 'Botellas', products: ['Botella hoppy','Botella Hoppy con aluminio','Termo estilo lata'] },
-          { name: 'Jarros', products: ['Jarro chopp polímero','Jarra chopp cervecero','Jarro térmico con tapa','Jarro tipo Cantimplora'] }
+          { name: 'Jarros', products: ['Jarro chopp polímero','Jarro térmico con tapa','Jarro tipo Cantimplora'] }
         ] },
       { 
         id: 'remeras', 
@@ -315,13 +315,13 @@
       { id: 'escolar-futbol', name: 'Escolar y Fútbol', icon: '⚽', gradient: 'from-amber-400 to-orange-500',
         subcategories: [
           { name: 'Babys', products: ['Body bebé','Body bebé con caja sorpresa'] },
-          { name: 'Escolar', products: ['Set de jardín','Funda carpeta N°3','Regla de madera','Bandas de jura','Señalador de libros'] },
-          { name: 'Fútbol', products: ['Canilleras','Medias canilleras','Banderín'] }
+          { name: 'Escolar', products: ['Set de jardín','Funda carpeta N°3','Regla de madera','Bandas de jura','Bandas de jura sin detalles','Señalador de libros'] },
+          { name: 'Fútbol', products: ['Canillera con tamaño 10 X 16 cm','Canillera con tamaño 12 X 20 cm','Canillera con tamaño 14 X 24 CM','Medias canilleras','Banderín'] }
         ] },
       { id: 'accesorios', name: 'Accesorios', icon: '🎁', gradient: 'from-pink-400 to-fuchsia-500',
         subcategories: [
           { name: 'Madera', products: ['Portaretratos "Feliz Día"','Portaretratos "Tú & Yo"','Portallaves pared','Portacelular','Destapador pared','Estuche cerveza regalo','Servilletero','Set parrillero con plato'] },
-          { name: 'Otros', products: ['Gorras','Llavero destapador','Llaveros camiseta','Llaveros clásicos','Portavasos de tela','Individual de mesa de tela','Mousepad circular','Mousepad rectangular','Almohadas con relleno','Duo taza + almohadón'] }
+          { name: 'Otros', products: ['Gorras','Llavero destapador','Llaveros camiseta','Llaveros clásicos','Portavasos de tela','Individual de mesa de tela','Mousepad circular','Mousepad Rectangular 21x18,5cm','Mousepad Rectangular 29x20,5cm','Almohadas con relleno 30x30','Almohadas con relleno 20x30','Duo taza + almohadón'] }
         ] },
       { id: 'fechas-especiales', name: 'Fechas Especiales', icon: '🎉', gradient: 'from-red-400 to-pink-500',
         subcategories: [
@@ -334,9 +334,11 @@
       { id: 'papeleria', name: 'Papelería Creativa', icon: '✨', gradient: 'from-violet-400 to-purple-600',
         extras: [{ id: 'extra-imantado', label: 'Producto imantado', perProduct: true }],
         subcategories: [
-          { name: 'Stickers', products: ['Stickers clásicos','Stickers emprendimiento','Stickers holográficos','Stickers holográficos transparentes','Stickers sublimados en vinilo'] },
-          { name: 'Fotos Polaroid', products: ['Fotos polaroid x5','Fotos polaroid x10','Fotos polaroid x15','Tira Fotocabina de 3 x5','Tira Fotocabina de 3 x10','Tira Fotocabina de 3 x15'] },
-          { name: 'Cumpleañitos', products: ['Caketopper clásico','Caketopper 3D','Banderín personalizado','Invitación digital para eventos','Invitación tarjeta física para eventos'] }
+          { name: 'Stickers', products: ['Stickers clásicos','Stickers holográficos','Stickers sublimados en vinilo'] },
+          { name: 'Fotos Polaroid', products: ['Fotos polaroid x12','Fotos polaroid x12 Imantadas','Tira Fotocabina de 3 x5','Tira Fotocabina de 3 x5 Imantadas'] },
+          { name: 'Cumpleañitos', products: ['Caketopper clásico','Caketopper 3D','Invitación digital para eventos','Invitación tarjeta física para eventos','Caja pochoclera','Caja lecherita 3D - Grande','Bolsa personajes con manija','Caja camión 3D','Caja Camiseta chica','Caja lecherita simple - chica','Bolsa golosinera - mate','Caja estilo MC Donald's','Bolsa Golosinera'] },
+          { name: 'Emprendimientos', products: ['Agenda emprendedora','Tarjetas emprendimiento','Tarjetas emprendimiento Instagram','Stickers emprendimiento','Stickers emprendimiento holográficos','Combo emprendedor 1 - 18 tarjetas de presentación clásicas + 2 planchas de stickers blancos con tu logo','Combo emprendedor 2 - 24 tarjeta de Instagram + 2 planchas de stickers holograficos con tu logo'] },
+          { name: 'Impresiones escolares', products: ['Pack carátulas n3 x 6 unidades','Pack carátulas n3 x 6 unidades Laminados','Planner inmantado horarios','Agenda personalizada'] }
         ] }
     ];
 
