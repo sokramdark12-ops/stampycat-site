@@ -712,79 +712,82 @@ async function loadPrices() {
     }
 
     // ==================== AGREGAR AL CARRITO CON SELECCIÓN ====================
+        // ==================== AGREGAR AL CARRITO CON SELECCIÓN ====================
     function addToCartWithSelection(key, catId, subName, prodName) {
-  const card = document.querySelector(`.product-card[data-key="${key}"]`);
-  if (!card) return;
+      const card = document.querySelector(`.product-card[data-key="${key}"]`);
+      if (!card) return;
 
-  let talle = '';
-  let color = '';
-  let imageToSave = null;
+      let talle = '';
+      let color = '';
+      let imageToSave = null;
 
-  // Leer talle y color solo si es remera
-  if (catId === 'remeras') {
-    const talleSelect = card.querySelector('.talle-select');
-    const colorSelect = card.querySelector('.color-select');
-    
-    talle = talleSelect ? talleSelect.value.trim() : '';
-    color = colorSelect ? colorSelect.value.trim() : '';
+      // Leer talle y color (solo remeras)
+      if (catId === 'remeras') {
+        const talleSelect = card.querySelector('.talle-select');
+        const colorSelect = card.querySelector('.color-select');
+        
+        talle = talleSelect ? talleSelect.value.trim() : '';
+        color = colorSelect ? colorSelect.value.trim() : '';
 
-    if (!talle) {
-      showToast('⚠️ Por favor elegí un talle');
-      return;
+        if (!talle) {
+          showToast('⚠️ Por favor elegí un talle');
+          return;
+        }
+        if (!color) {
+          showToast('⚠️ Por favor elegí un color');
+          return;
+        }
+      }
+
+      // Obtener imagen temporal si existe
+      if (window.tempProductImages && window.tempProductImages[key]) {
+        imageToSave = window.tempProductImages[key];
+      }
+
+      // Crear clave ÚNICA (esto soluciona todo)
+      let finalKey = key;
+      const timestamp = Date.now();
+      
+      if (imageToSave) {
+        finalKey = `${key}|img-${timestamp}`;           // Cada imagen = ítem diferente
+      } else if (catId === 'remeras') {
+        finalKey = `${key}|${talle}|${color}`;          // Remeras sin imagen
+      }
+
+      // Crear item
+      if (!cart[finalKey]) {
+        cart[finalKey] = {
+          qty: 0,
+          extras: new Set(),
+          image: imageToSave,
+          talle: talle,
+          color: color,
+          catName: CATEGORIES.find(c => c.id === catId)?.name || '',
+          subName: subName,
+          productName: prodName,
+          baseKey: key
+        };
+      }
+
+      cart[finalKey].qty += 1;
+
+      showToast(`✅ ${prodName} agregado`);
+
+      // LIMPIEZA
+      if (catId === 'remeras') {
+        const talleSelect = card.querySelector('.talle-select');
+        const colorSelect = card.querySelector('.color-select');
+        if (talleSelect) talleSelect.value = '';
+        if (colorSelect) colorSelect.value = '';
+      }
+
+      if (window.tempProductImages) delete window.tempProductImages[key];
+      const preview = card.querySelector('.temp-image-preview');
+      if (preview) preview.remove();
+
+      updateCartUI();
+      selectCategory(activeCategoryId);
     }
-    if (!color) {
-      showToast('⚠️ Por favor elegí un color');
-      return;
-    }
-  }
-
-  // Obtener imagen si fue subida
-  if (window.tempProductImages && window.tempProductImages[key]) {
-    imageToSave = window.tempProductImages[key];
-  }
-
-  // Crear clave única para evitar duplicados
-  let finalKey = key;
-  if (catId === 'remeras' || imageToSave) {
-    finalKey = `${key}|${talle}|${color}|${imageToSave ? 'img' : 'noimg'}`;
-  }
-
-  // Crear el item en el carrito
-  if (!cart[finalKey]) {
-    cart[finalKey] = {
-      qty: 0,
-      extras: new Set(),
-      image: imageToSave,
-      talle: talle,
-      color: color,
-      catName: CATEGORIES.find(c => c.id === catId)?.name || '',
-      subName: subName,
-      productName: prodName,
-      baseKey: key
-    };
-  }
-
-  cart[finalKey].qty += 1;
-
-  showToast(`✅ ${prodName} agregado al carrito`);
-
-  // LIMPIEZA TOTAL después de agregar
-  if (catId === 'remeras') {
-    const talleSelect = card.querySelector('.talle-select');
-    const colorSelect = card.querySelector('.color-select');
-    if (talleSelect) talleSelect.value = '';
-    if (colorSelect) colorSelect.value = '';
-  }
-
-  // Limpiar preview de imagen
-  if (window.tempProductImages) delete window.tempProductImages[key];
-  const preview = card.querySelector('.temp-image-preview');
-  if (preview) preview.remove();
-
-  // Actualizar interfaz
-  updateCartUI();
-  selectCategory(activeCategoryId);
-}
 
     function toggleExtra(key, extraId) {
       if (!cart[key]) return;
@@ -1105,34 +1108,6 @@ async function solicitarPresupuesto() {
         const file = e.target.files[0];
         handleImageUpload(key, file);
         e.target.value = '';
-      }
-
-      if (e.target.classList.contains('talle-select') || e.target.classList.contains('color-select')) {
-        const key = e.target.dataset.key;
-        const value = e.target.value;
-
-        if (!cart[key]) {
-          const [catId, subName, prodName] = key.split('|');
-          cart[key] = { 
-            qty: 1, 
-            extras: new Set(), 
-            image: null, 
-            talle: '', 
-            color: '', 
-            catName: CATEGORIES.find(c => c.id === catId)?.name || '', 
-            subName, 
-            productName: prodName 
-          };
-          document.querySelectorAll(`[data-qty-display="${key}"]`).forEach(d => d.textContent = '1');
-        }
-
-        if (e.target.classList.contains('talle-select')) {
-          cart[key].talle = value;
-        } else if (e.target.classList.contains('color-select')) {
-          cart[key].color = value;
-        }
-
-        updateCartUI();
       }
     });
 
