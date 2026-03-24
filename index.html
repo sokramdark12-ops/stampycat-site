@@ -718,8 +718,9 @@ function addToCartWithSelection(key, catId, subName, prodName) {
 
   let talle = '';
   let color = '';
-  let finalKey = key;   // Clave base
+  let imageToSave = null;
 
+  // Obtener valores de remeras
   if (catId === 'remeras') {
     const talleSelect = card.querySelector('.talle-select');
     const colorSelect = card.querySelector('.color-select');
@@ -735,29 +736,31 @@ function addToCartWithSelection(key, catId, subName, prodName) {
       showToast('⚠️ Por favor elegí un color');
       return;
     }
-
-    // Crear clave única si hay talle o color diferente
-    finalKey = `${key}|${talle}|${color}`;
   }
 
-  // Tomar imagen temporal si existe
-  let imageToSave = null;
+  // Obtener imagen temporal si existe
   if (window.tempProductImages && window.tempProductImages[key]) {
     imageToSave = window.tempProductImages[key];
   }
 
-  // Crear o actualizar el item con clave única
+  // Crear clave ÚNICA según lo que tenga (talle, color o imagen)
+  let finalKey = key;
+  if (talle || color || imageToSave) {
+    finalKey = `${key}|${talle}|${color}|${imageToSave ? 'img' : 'noimg'}`;
+  }
+
+  // Crear item si no existe
   if (!cart[finalKey]) {
-    cart[finalKey] = { 
-      qty: 0, 
-      extras: new Set(), 
+    cart[finalKey] = {
+      qty: 0,
+      extras: new Set(),
       image: imageToSave,
       talle: talle,
       color: color,
-      catName: CATEGORIES.find(c => c.id === catId)?.name || '', 
-      subName, 
+      catName: CATEGORIES.find(c => c.id === catId)?.name || '',
+      subName: subName,
       productName: prodName,
-      baseKey: key   // guardamos la clave original para referencia
+      baseKey: key
     };
   }
 
@@ -765,8 +768,7 @@ function addToCartWithSelection(key, catId, subName, prodName) {
 
   showToast(`✅ ${prodName} agregado`);
 
-  // === LIMPIEZA FUERTE ===
-  // Limpiar selecciones
+  // LIMPIEZA TOTAL
   if (catId === 'remeras') {
     const talleSelect = card.querySelector('.talle-select');
     const colorSelect = card.querySelector('.color-select');
@@ -774,12 +776,10 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     if (colorSelect) colorSelect.value = '';
   }
 
-  // Limpiar imagen temporal y preview
-  if (window.tempProductImages) {
-    delete window.tempProductImages[key];
-  }
-  const tempPreview = card.querySelector('.temp-image-preview');
-  if (tempPreview) tempPreview.remove();
+  // Limpiar imagen y preview
+  if (window.tempProductImages) delete window.tempProductImages[key];
+  const preview = card.querySelector('.temp-image-preview');
+  if (preview) preview.remove();
 
   // Refrescar todo
   updateCartUI();
@@ -815,7 +815,6 @@ function addToCartWithSelection(key, catId, subName, prodName) {
 
     const card = document.querySelector(`.product-card[data-key="${key}"]`);
     if (card) {
-      // Eliminar preview anterior
       const oldPreview = card.querySelector('.temp-image-preview');
       if (oldPreview) oldPreview.remove();
 
@@ -844,7 +843,7 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     delete window.tempProductImages[key];
   }
 
-  showToast('🗑️ Imagen eliminada');
+  showToast('🗑️ Imagen eliminada de la vista');
 }
 
     function updateCartUI() {
@@ -877,6 +876,7 @@ function addToCartWithSelection(key, catId, subName, prodName) {
       Object.entries(cart).forEach(([key, item]) => {
         if (item.qty <= 0) return;
 
+        const baseKey = item.baseKey || key.split('|')[0];
         const baseKey = item.baseKey || key.split('|')[0];
         const cat = CATEGORIES.find(c => c.id === baseKey);
         let extrasText = '';
