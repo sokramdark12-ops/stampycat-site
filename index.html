@@ -720,7 +720,7 @@ async function loadPrices() {
   let color = '';
   let imageToSave = null;
 
-  // === SOLO PARA REMERAS ===
+  // Leer talle y color solo si es remera
   if (catId === 'remeras') {
     const talleSelect = card.querySelector('.talle-select');
     const colorSelect = card.querySelector('.color-select');
@@ -738,18 +738,18 @@ async function loadPrices() {
     }
   }
 
-  // Obtener imagen temporal si existe
+  // Obtener imagen si fue subida
   if (window.tempProductImages && window.tempProductImages[key]) {
     imageToSave = window.tempProductImages[key];
   }
 
-  // Crear clave única
+  // Crear clave única para evitar duplicados
   let finalKey = key;
   if (catId === 'remeras' || imageToSave) {
     finalKey = `${key}|${talle}|${color}|${imageToSave ? 'img' : 'noimg'}`;
   }
 
-  // Crear item en carrito
+  // Crear el item en el carrito
   if (!cart[finalKey]) {
     cart[finalKey] = {
       qty: 0,
@@ -766,9 +766,9 @@ async function loadPrices() {
 
   cart[finalKey].qty += 1;
 
-  showToast(`✅ ${prodName} agregado`);
+  showToast(`✅ ${prodName} agregado al carrito`);
 
-  // LIMPIEZA
+  // LIMPIEZA TOTAL después de agregar
   if (catId === 'remeras') {
     const talleSelect = card.querySelector('.talle-select');
     const colorSelect = card.querySelector('.color-select');
@@ -776,11 +776,12 @@ async function loadPrices() {
     if (colorSelect) colorSelect.value = '';
   }
 
-  // Limpiar imagen temporal y preview
+  // Limpiar preview de imagen
   if (window.tempProductImages) delete window.tempProductImages[key];
   const preview = card.querySelector('.temp-image-preview');
   if (preview) preview.remove();
 
+  // Actualizar interfaz
   updateCartUI();
   selectCategory(activeCategoryId);
 }
@@ -1098,17 +1099,7 @@ async function solicitarPresupuesto() {
     });
 
     document.addEventListener('change', e => {
-      if (e.target.classList.contains('extras-check')) {
-        const key = e.target.dataset.key;
-        const extraId = e.target.dataset.extraId;
-        if (!cart[key]) {
-          const [catId, subName, prodName] = key.split('|');
-          cart[key] = { qty: 1, extras: new Set(), image: null, catName: CATEGORIES.find(c => c.id === catId)?.name || '', subName, productName: prodName };
-          document.querySelectorAll(`[data-qty-display="${key}"]`).forEach(d => d.textContent = '1');
-        }
-        toggleExtra(key, extraId);
-      }
-
+    
       if (e.target.classList.contains('image-input')) {
         const key = e.target.dataset.key;
         const file = e.target.files[0];
