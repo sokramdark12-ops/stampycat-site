@@ -718,52 +718,55 @@ function addToCartWithSelection(key, catId, subName, prodName) {
 
   let talle = '';
   let color = '';
+  let finalKey = key;   // Clave base
 
   if (catId === 'remeras') {
     const talleSelect = card.querySelector('.talle-select');
     const colorSelect = card.querySelector('.color-select');
     
-    talle = talleSelect ? talleSelect.value : '';
-    color = colorSelect ? colorSelect.value : '';
+    talle = talleSelect ? talleSelect.value.trim() : '';
+    color = colorSelect ? colorSelect.value.trim() : '';
 
     if (!talle) {
       showToast('⚠️ Por favor elegí un talle');
       return;
     }
-    if (!color && catId === 'remeras') {
+    if (!color) {
       showToast('⚠️ Por favor elegí un color');
       return;
     }
+
+    // Crear clave única si hay talle o color diferente
+    finalKey = `${key}|${talle}|${color}`;
   }
 
-  // Crear item si no existe
-  if (!cart[key]) {
-    cart[key] = { 
+  // Tomar imagen temporal si existe
+  let imageToSave = null;
+  if (window.tempProductImages && window.tempProductImages[key]) {
+    imageToSave = window.tempProductImages[key];
+  }
+
+  // Crear o actualizar el item con clave única
+  if (!cart[finalKey]) {
+    cart[finalKey] = { 
       qty: 0, 
       extras: new Set(), 
-      image: null, 
-      talle: '', 
-      color: '', 
+      image: imageToSave,
+      talle: talle,
+      color: color,
       catName: CATEGORIES.find(c => c.id === catId)?.name || '', 
       subName, 
-      productName: prodName 
+      productName: prodName,
+      baseKey: key   // guardamos la clave original para referencia
     };
   }
 
-  // Tomar la imagen temporal y guardarla en el carrito
-  if (window.tempProductImages && window.tempProductImages[key]) {
-    cart[key].image = window.tempProductImages[key];
-  }
-
-  // Agregar una unidad
-  cart[key].qty += 1;
-  cart[key].talle = talle;
-  cart[key].color = color;
+  cart[finalKey].qty += 1;
 
   showToast(`✅ ${prodName} agregado`);
 
-  // === LIMPIEZA IMPORTANTE ===
-  // Limpiar selecciones de talle y color
+  // === LIMPIEZA FUERTE ===
+  // Limpiar selecciones
   if (catId === 'remeras') {
     const talleSelect = card.querySelector('.talle-select');
     const colorSelect = card.querySelector('.color-select');
@@ -771,17 +774,16 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     if (colorSelect) colorSelect.value = '';
   }
 
-  // Limpiar imagen temporal y preview de la tarjeta
+  // Limpiar imagen temporal y preview
   if (window.tempProductImages) {
     delete window.tempProductImages[key];
   }
-
   const tempPreview = card.querySelector('.temp-image-preview');
   if (tempPreview) tempPreview.remove();
 
-  // Actualizar carrito y re-renderizar productos
+  // Refrescar todo
   updateCartUI();
-  selectCategory(activeCategoryId);   // Esto refresca toda la vista para limpiar
+  selectCategory(activeCategoryId);
 }
 
     function toggleExtra(key, extraId) {
@@ -808,14 +810,12 @@ function addToCartWithSelection(key, catId, subName, prodName) {
   reader.onload = (e) => {
     const imageData = e.target.result;
 
-    // Guardar imagen temporal
     if (!window.tempProductImages) window.tempProductImages = {};
     window.tempProductImages[key] = imageData;
 
-    // Actualizar visualmente la tarjeta (mostrar preview)
     const card = document.querySelector(`.product-card[data-key="${key}"]`);
     if (card) {
-      // Eliminar preview anterior si existe
+      // Eliminar preview anterior
       const oldPreview = card.querySelector('.temp-image-preview');
       if (oldPreview) oldPreview.remove();
 
@@ -840,12 +840,11 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     if (preview) preview.remove();
   }
 
-  // Solo limpiamos la temporal, no tocamos el carrito
   if (window.tempProductImages) {
     delete window.tempProductImages[key];
   }
 
-  showToast('🗑️ Imagen eliminada de la vista');
+  showToast('🗑️ Imagen eliminada');
 }
 
     function updateCartUI() {
@@ -878,7 +877,8 @@ function addToCartWithSelection(key, catId, subName, prodName) {
       Object.entries(cart).forEach(([key, item]) => {
         if (item.qty <= 0) return;
 
-        const cat = CATEGORIES.find(c => c.id === key.split('|')[0]);
+        const baseKey = item.baseKey || key.split('|')[0];
+        const cat = CATEGORIES.find(c => c.id === baseKey);
         let extrasText = '';
         if (item.extras.size > 0 && cat?.extras) {
           const names = cat.extras.filter(e => item.extras.has(e.id)).map(e => e.label);
