@@ -877,7 +877,6 @@ function addToCartWithSelection(key, catId, subName, prodName) {
         if (item.qty <= 0) return;
 
         const baseKey = item.baseKey || key.split('|')[0];
-        const baseKey = item.baseKey || key.split('|')[0];
         const cat = CATEGORIES.find(c => c.id === baseKey);
         let extrasText = '';
         if (item.extras.size > 0 && cat?.extras) {
