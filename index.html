@@ -730,13 +730,13 @@ function addToCartWithSelection(key, catId, subName, prodName) {
       showToast('⚠️ Por favor elegí un talle');
       return;
     }
-    if (!color) {
+    if (!color && catId === 'remeras') {
       showToast('⚠️ Por favor elegí un color');
       return;
     }
   }
 
-  // Crear el item si no existe
+  // Crear item si no existe
   if (!cart[key]) {
     cart[key] = { 
       qty: 0, 
@@ -750,18 +750,20 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     };
   }
 
-  // === CLAVE: Tomamos la imagen temporal y la guardamos en el carrito ===
+  // Tomar la imagen temporal y guardarla en el carrito
   if (window.tempProductImages && window.tempProductImages[key]) {
     cart[key].image = window.tempProductImages[key];
   }
 
+  // Agregar una unidad
   cart[key].qty += 1;
   cart[key].talle = talle;
   cart[key].color = color;
 
-  showToast(`✅ ${prodName} agregado al carrito`);
+  showToast(`✅ ${prodName} agregado`);
 
-  // Limpiar selecciones y imagen temporal
+  // === LIMPIEZA IMPORTANTE ===
+  // Limpiar selecciones de talle y color
   if (catId === 'remeras') {
     const talleSelect = card.querySelector('.talle-select');
     const colorSelect = card.querySelector('.color-select');
@@ -769,13 +771,17 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     if (colorSelect) colorSelect.value = '';
   }
 
+  // Limpiar imagen temporal y preview de la tarjeta
   if (window.tempProductImages) {
     delete window.tempProductImages[key];
   }
 
-  // Re-render para limpiar la vista
-  selectCategory(activeCategoryId);
+  const tempPreview = card.querySelector('.temp-image-preview');
+  if (tempPreview) tempPreview.remove();
+
+  // Actualizar carrito y re-renderizar productos
   updateCartUI();
+  selectCategory(activeCategoryId);   // Esto refresca toda la vista para limpiar
 }
 
     function toggleExtra(key, extraId) {
@@ -802,16 +808,19 @@ function addToCartWithSelection(key, catId, subName, prodName) {
   reader.onload = (e) => {
     const imageData = e.target.result;
 
-    // Guardamos la imagen TEMPORAL solo para mostrarla en la tarjeta
+    // Guardar imagen temporal
+    if (!window.tempProductImages) window.tempProductImages = {};
+    window.tempProductImages[key] = imageData;
+
+    // Actualizar visualmente la tarjeta (mostrar preview)
     const card = document.querySelector(`.product-card[data-key="${key}"]`);
     if (card) {
-      // Quitamos cualquier preview anterior
-      const oldPreview = card.querySelector('.relative.w-full.h-20');
+      // Eliminar preview anterior si existe
+      const oldPreview = card.querySelector('.temp-image-preview');
       if (oldPreview) oldPreview.remove();
 
-      // Agregamos la nueva preview temporal
       const previewHTML = `
-        <div class="relative w-full h-20 bg-gray-100 rounded-lg overflow-hidden mb-2">
+        <div class="temp-image-preview relative w-full h-20 bg-gray-100 rounded-lg overflow-hidden mb-3">
           <img src="${imageData}" alt="Referencia" class="w-full h-full object-cover" loading="lazy">
           <button class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-600 text-xs font-bold" data-remove-image="${key}">×</button>
         </div>
@@ -819,18 +828,24 @@ function addToCartWithSelection(key, catId, subName, prodName) {
       card.insertAdjacentHTML('afterbegin', previewHTML);
     }
 
-    // Guardamos la imagen temporal para usarla al agregar al carrito
-    if (!window.tempProductImages) window.tempProductImages = {};
-    window.tempProductImages[key] = imageData;
-
     showToast('✅ Imagen cargada - Se guardará al agregar al carrito');
   };
   reader.readAsDataURL(file);
 }
 
     function removeImage(key) {
-  showToast(' Imagen eliminada de la vista actual');
-  selectCategory(activeCategoryId);   // refresca la tarjeta
+  const card = document.querySelector(`.product-card[data-key="${key}"]`);
+  if (card) {
+    const preview = card.querySelector('.temp-image-preview');
+    if (preview) preview.remove();
+  }
+
+  // Solo limpiamos la temporal, no tocamos el carrito
+  if (window.tempProductImages) {
+    delete window.tempProductImages[key];
+  }
+
+  showToast('🗑️ Imagen eliminada de la vista');
 }
 
     function updateCartUI() {
