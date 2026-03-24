@@ -634,7 +634,7 @@ async function loadPrices() {
             `;
           }
 
-            card.innerHTML = `
+                      card.innerHTML = `
             <div class="flex flex-col gap-3">
               <!-- Nombre + Precio -->
               <div>
@@ -712,7 +712,7 @@ async function loadPrices() {
     }
 
     // ==================== AGREGAR AL CARRITO CON SELECCIÓN ====================
-function addToCartWithSelection(key, catId, subName, prodName) {
+    function addToCartWithSelection(key, catId, subName, prodName) {
   const card = document.querySelector(`.product-card[data-key="${key}"]`);
   if (!card) return;
 
@@ -720,7 +720,7 @@ function addToCartWithSelection(key, catId, subName, prodName) {
   let color = '';
   let imageToSave = null;
 
-  // Leer talle y color (solo remeras)
+  // === SOLO PARA REMERAS ===
   if (catId === 'remeras') {
     const talleSelect = card.querySelector('.talle-select');
     const colorSelect = card.querySelector('.color-select');
@@ -728,24 +728,28 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     talle = talleSelect ? talleSelect.value.trim() : '';
     color = colorSelect ? colorSelect.value.trim() : '';
 
-    if (!talle) { showToast('⚠️ Elegí un talle'); return; }
-    if (!color) { showToast('⚠️ Elegí un color'); return; }
+    if (!talle) {
+      showToast('⚠️ Por favor elegí un talle');
+      return;
+    }
+    if (!color) {
+      showToast('⚠️ Por favor elegí un color');
+      return;
+    }
   }
 
-  // Tomar imagen temporal si existe
+  // Obtener imagen temporal si existe
   if (window.tempProductImages && window.tempProductImages[key]) {
     imageToSave = window.tempProductImages[key];
   }
 
-  // CLAVE ÚNICA (esto soluciona la duplicación)
+  // Crear clave única
   let finalKey = key;
-  if (imageToSave) {
-    finalKey = `${key}|img-${Date.now()}`;           // cada imagen = ítem diferente
-  } else if (talle || color) {
-    finalKey = `${key}|${talle}|${color}`;           // remeras sin imagen
+  if (catId === 'remeras' || imageToSave) {
+    finalKey = `${key}|${talle}|${color}|${imageToSave ? 'img' : 'noimg'}`;
   }
 
-  // Crear o actualizar
+  // Crear item en carrito
   if (!cart[finalKey]) {
     cart[finalKey] = {
       qty: 0,
@@ -764,7 +768,7 @@ function addToCartWithSelection(key, catId, subName, prodName) {
 
   showToast(`✅ ${prodName} agregado`);
 
-  // LIMPIEZA TOTAL
+  // LIMPIEZA
   if (catId === 'remeras') {
     const talleSelect = card.querySelector('.talle-select');
     const colorSelect = card.querySelector('.color-select');
@@ -772,6 +776,7 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     if (colorSelect) colorSelect.value = '';
   }
 
+  // Limpiar imagen temporal y preview
   if (window.tempProductImages) delete window.tempProductImages[key];
   const preview = card.querySelector('.temp-image-preview');
   if (preview) preview.remove();
