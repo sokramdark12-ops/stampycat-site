@@ -634,7 +634,7 @@ async function loadPrices() {
             `;
           }
 
-                              card.innerHTML = `
+            card.innerHTML = `
             <div class="flex flex-col gap-3">
               <!-- Nombre + Precio -->
               <div>
@@ -646,7 +646,7 @@ async function loadPrices() {
 
               ${extrasHTML}
 
-              <!-- Solo para Remeras: Talle y Color -->
+              <!-- Talle y Color SOLO para Remeras -->
               ${cat.id === 'remeras' ? `
                 <div class="grid grid-cols-2 gap-3 text-xs">
                   <div>
@@ -671,7 +671,7 @@ async function loadPrices() {
                 Agregar al carrito
               </button>
 
-              <!-- Botón de referencia (más chico) -->
+              <!-- Botón referencia -->
               <label class="flex items-center justify-center gap-1 w-full px-3 py-2 bg-purple-50 hover:bg-purple-100 rounded-lg cursor-pointer transition-colors border border-purple-200 text-xs font-medium text-purple-600">
                 <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
                 <span class="hidden sm:inline">Agregar referencia</span>
@@ -720,7 +720,7 @@ function addToCartWithSelection(key, catId, subName, prodName) {
   let color = '';
   let imageToSave = null;
 
-  // Obtener valores de remeras
+  // Leer talle y color (solo remeras)
   if (catId === 'remeras') {
     const talleSelect = card.querySelector('.talle-select');
     const colorSelect = card.querySelector('.color-select');
@@ -728,28 +728,24 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     talle = talleSelect ? talleSelect.value.trim() : '';
     color = colorSelect ? colorSelect.value.trim() : '';
 
-    if (!talle) {
-      showToast('⚠️ Por favor elegí un talle');
-      return;
-    }
-    if (!color) {
-      showToast('⚠️ Por favor elegí un color');
-      return;
-    }
+    if (!talle) { showToast('⚠️ Elegí un talle'); return; }
+    if (!color) { showToast('⚠️ Elegí un color'); return; }
   }
 
-  // Obtener imagen temporal si existe
+  // Tomar imagen temporal si existe
   if (window.tempProductImages && window.tempProductImages[key]) {
     imageToSave = window.tempProductImages[key];
   }
 
-  // Crear clave ÚNICA según lo que tenga (talle, color o imagen)
+  // CLAVE ÚNICA (esto soluciona la duplicación)
   let finalKey = key;
-  if (talle || color || imageToSave) {
-    finalKey = `${key}|${talle}|${color}|${imageToSave ? 'img' : 'noimg'}`;
+  if (imageToSave) {
+    finalKey = `${key}|img-${Date.now()}`;           // cada imagen = ítem diferente
+  } else if (talle || color) {
+    finalKey = `${key}|${talle}|${color}`;           // remeras sin imagen
   }
 
-  // Crear item si no existe
+  // Crear o actualizar
   if (!cart[finalKey]) {
     cart[finalKey] = {
       qty: 0,
@@ -776,12 +772,10 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     if (colorSelect) colorSelect.value = '';
   }
 
-  // Limpiar imagen y preview
   if (window.tempProductImages) delete window.tempProductImages[key];
   const preview = card.querySelector('.temp-image-preview');
   if (preview) preview.remove();
 
-  // Refrescar todo
   updateCartUI();
   selectCategory(activeCategoryId);
 }
