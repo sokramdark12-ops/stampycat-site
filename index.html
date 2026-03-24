@@ -634,44 +634,53 @@ async function loadPrices() {
             `;
           }
 
-                    card.innerHTML = `
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex-1 min-w-0">
+                              card.innerHTML = `
+            <div class="flex flex-col gap-3">
+              <!-- Nombre + Precio -->
+              <div>
                 <p class="font-semibold text-gray-700 text-sm truncate">${prod}</p>
-                
-                <!-- === PRECIO AQUÍ === -->
                 <p class="text-pink-600 font-heading font-bold text-base mt-1">
                   $${(prices?.[catId]?.[sub.name]?.[prod] || 0).toLocaleString('es-AR')}
                 </p>
-                
-                ${extrasHTML}
-                
-                ${cat.id === 'remeras' ? `
-                  <div class="mt-3 grid grid-cols-2 gap-3 text-xs">
-                    <div>
-                      <label class="block text-gray-600 font-medium mb-1">Talle</label>
-                      <select class="talle-select w-full border border-gray-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-400" data-key="${key}">
-                        <option value="">Elegir talle</option>
-                        ${tallesHTML}
-                      </select>
-                    </div>
-                    ${colorFieldHTML}
+              </div>
+
+              ${extrasHTML}
+
+              <!-- Solo para Remeras: Talle y Color -->
+              ${cat.id === 'remeras' ? `
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <label class="block text-gray-600 font-medium mb-1">Talle</label>
+                    <select class="talle-select w-full border border-gray-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-400" data-key="${key}">
+                      <option value="">Elegir talle</option>
+                      ${tallesHTML}
+                    </select>
                   </div>
-                ` : ''}
-              </div>
-              <div class="flex items-center gap-1 shrink-0">
-                <button class="qty-btn w-8 h-8 rounded-full bg-pink-100 text-pink-600 font-bold flex items-center justify-center hover:bg-pink-200 text-sm" data-action="dec" data-key="${key}">−</button>
-                <span class="w-8 text-center font-heading font-bold text-gray-700 text-sm" data-qty-display="${key}">${qty}</span>
-                <button class="qty-btn w-8 h-8 rounded-full bg-pink-500 text-white font-bold flex items-center justify-center hover:bg-pink-600 text-sm" data-action="inc" data-key="${key}" data-cat-id="${catId}" data-sub-name="${sub.name}" data-prod-name="${prod}">+</button>
-              </div>
+                  ${colorFieldHTML}
+                </div>
+              ` : ''}
+
+              <!-- Botón AGREGAR AL CARRITO -->
+              <button 
+                class="add-to-cart-btn w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-heading font-bold py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 text-sm"
+                data-key="${key}"
+                data-cat-id="${catId}"
+                data-sub-name="${sub.name}"
+                data-prod-name="${prod}">
+                <i data-lucide="shopping-cart" style="width:18px;height:18px;"></i>
+                Agregar al carrito
+              </button>
+
+              <!-- Botón de referencia (más chico) -->
+              <label class="flex items-center justify-center gap-1 w-full px-3 py-2 bg-purple-50 hover:bg-purple-100 rounded-lg cursor-pointer transition-colors border border-purple-200 text-xs font-medium text-purple-600">
+                <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
+                <span class="hidden sm:inline">Agregar referencia</span>
+                <span class="sm:hidden">Foto</span>
+                <input type="file" class="image-input hidden" accept="image/*" data-key="${key}">
+              </label>
             </div>
+
             ${imageHTML}
-            <label class="flex items-center justify-center gap-1 w-full px-2 py-1.5 bg-purple-50 hover:bg-purple-100 rounded-lg cursor-pointer transition-colors border border-purple-200 text-xs font-medium text-purple-600 mt-2">
-              <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
-              <span class="hidden sm:inline">Agregar referencia</span>
-              <span class="sm:hidden">Foto</span>
-              <input type="file" class="image-input hidden" accept="image/*" data-key="${key}">
-            </label>
           `;
 
           prodGrid.appendChild(card);
@@ -701,6 +710,63 @@ async function loadPrices() {
       if (delta > 0) showToast(` ${prodName} agregado`);
       updateCartUI();
     }
+
+    // ==================== AGREGAR AL CARRITO CON SELECCIÓN ====================
+function addToCartWithSelection(key, catId, subName, prodName) {
+  const card = document.querySelector(`.product-card[data-key="${key}"]`);
+  if (!card) return;
+
+  let talle = '';
+  let color = '';
+
+  if (catId === 'remeras') {
+    const talleSelect = card.querySelector('.talle-select');
+    const colorSelect = card.querySelector('.color-select');
+    
+    talle = talleSelect ? talleSelect.value : '';
+    color = colorSelect ? colorSelect.value : '';
+
+    // Validación básica
+    if (!talle) {
+      showToast('⚠️ Por favor elegí un talle');
+      return;
+    }
+    if (!color) {
+      showToast('⚠️ Por favor elegí un color');
+      return;
+    }
+  }
+
+  // Crear o actualizar en el carrito
+  if (!cart[key]) {
+    cart[key] = { 
+      qty: 0, 
+      extras: new Set(), 
+      image: null, 
+      talle: '', 
+      color: '', 
+      catName: CATEGORIES.find(c => c.id === catId)?.name || '', 
+      subName, 
+      productName: prodName 
+    };
+  }
+
+  cart[key].qty += 1;
+  cart[key].talle = talle;
+  cart[key].color = color;
+
+  showToast(`✅ ${prodName} agregado`);
+
+  // Limpiar selecciones para poder agregar otro diferente
+  if (catId === 'remeras') {
+    const talleSelect = card.querySelector('.talle-select');
+    const colorSelect = card.querySelector('.color-select');
+    if (talleSelect) talleSelect.value = '';
+    if (colorSelect) colorSelect.value = '';
+  }
+
+  updateCartUI();
+}
 
     function toggleExtra(key, extraId) {
       if (!cart[key]) return;
@@ -952,6 +1018,17 @@ async function solicitarPresupuesto() {
         const subName = qtyBtn.dataset.subName || key.split('|')[1];
         const prodName = qtyBtn.dataset.prodName || key.split('|')[2];
         updateQty(key, delta, catId, subName, prodName);
+        return;
+      }
+
+            // Nuevo botón "Agregar al carrito"
+      const addBtn = e.target.closest('.add-to-cart-btn');
+      if (addBtn) {
+        const key = addBtn.dataset.key;
+        const catId = addBtn.dataset.catId;
+        const subName = addBtn.dataset.subName;
+        const prodName = addBtn.dataset.prodName;
+        addToCartWithSelection(key, catId, subName, prodName);
         return;
       }
 
