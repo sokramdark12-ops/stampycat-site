@@ -726,7 +726,6 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     talle = talleSelect ? talleSelect.value : '';
     color = colorSelect ? colorSelect.value : '';
 
-    // Validación básica
     if (!talle) {
       showToast('⚠️ Por favor elegí un talle');
       return;
@@ -737,7 +736,7 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     }
   }
 
-  // Crear o actualizar en el carrito
+  // Crear el item si no existe
   if (!cart[key]) {
     cart[key] = { 
       qty: 0, 
@@ -751,13 +750,18 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     };
   }
 
+  // === CLAVE: Tomamos la imagen temporal y la guardamos en el carrito ===
+  if (window.tempProductImages && window.tempProductImages[key]) {
+    cart[key].image = window.tempProductImages[key];
+  }
+
   cart[key].qty += 1;
   cart[key].talle = talle;
   cart[key].color = color;
 
-  showToast(`✅ ${prodName} agregado`);
+  showToast(`✅ ${prodName} agregado al carrito`);
 
-  // Limpiar selecciones para poder agregar otro diferente
+  // Limpiar selecciones y imagen temporal
   if (catId === 'remeras') {
     const talleSelect = card.querySelector('.talle-select');
     const colorSelect = card.querySelector('.color-select');
@@ -765,6 +769,12 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     if (colorSelect) colorSelect.value = '';
   }
 
+  if (window.tempProductImages) {
+    delete window.tempProductImages[key];
+  }
+
+  // Re-render para limpiar la vista
+  selectCategory(activeCategoryId);
   updateCartUI();
 }
 
@@ -779,38 +789,49 @@ function addToCartWithSelection(key, catId, subName, prodName) {
     }
 
     function handleImageUpload(key, file) {
-      if (!file || !file.type.startsWith('image/')) {
-        showToast(' Solo imágenes');
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        showToast(' Imagen muy grande (máx 5MB)');
-        return;
-      }
+  if (!file || !file.type.startsWith('image/')) {
+    showToast(' Solo imágenes');
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    showToast(' Imagen muy grande (máx 5MB)');
+    return;
+  }
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (!cart[key]) {
-          const [catId, subName, prodName] = key.split('|');
-          cart[key] = { qty: 1, extras: new Set(), image: null, catName: CATEGORIES.find(c => c.id === catId)?.name || '', subName, productName: prodName };
-          document.querySelectorAll(`[data-qty-display="${key}"]`).forEach(d => d.textContent = '1');
-        }
-        cart[key].image = e.target.result;
-        showToast(' Imagen agregada');
-        selectCategory(activeCategoryId);
-        updateCartUI();
-      };
-      reader.readAsDataURL(file);
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const imageData = e.target.result;
+
+    // Guardamos la imagen TEMPORAL solo para mostrarla en la tarjeta
+    const card = document.querySelector(`.product-card[data-key="${key}"]`);
+    if (card) {
+      // Quitamos cualquier preview anterior
+      const oldPreview = card.querySelector('.relative.w-full.h-20');
+      if (oldPreview) oldPreview.remove();
+
+      // Agregamos la nueva preview temporal
+      const previewHTML = `
+        <div class="relative w-full h-20 bg-gray-100 rounded-lg overflow-hidden mb-2">
+          <img src="${imageData}" alt="Referencia" class="w-full h-full object-cover" loading="lazy">
+          <button class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-600 text-xs font-bold" data-remove-image="${key}">×</button>
+        </div>
+      `;
+      card.insertAdjacentHTML('afterbegin', previewHTML);
     }
+
+    // Guardamos la imagen temporal para usarla al agregar al carrito
+    if (!window.tempProductImages) window.tempProductImages = {};
+    window.tempProductImages[key] = imageData;
+
+    showToast('✅ Imagen cargada - Se guardará al agregar al carrito');
+  };
+  reader.readAsDataURL(file);
+}
 
     function removeImage(key) {
-      if (cart[key]) {
-        cart[key].image = null;
-        showToast(' Imagen eliminada');
-        selectCategory(activeCategoryId);
-        updateCartUI();
-      }
-    }
+  showToast(' Imagen eliminada de la vista actual');
+  selectCategory(activeCategoryId);   // refresca la tarjeta
+}
 
     function updateCartUI() {
       const totalItems = Object.values(cart).reduce((sum, i) => sum + i.qty, 0);
