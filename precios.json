@@ -30,14 +30,14 @@
   },
   "remeras": {
     "Remeras Niños": {
-      "Remera algodón": 8500,
-      "Remera poliéster": 7800,
-      "Remera ranglan": 9200
-    },
-    "Remeras Adultos": {
       "Remera algodón": 10500,
       "Remera poliéster": 9800,
-      "Remera ranglan": 11800
+      "Remera ranglan": 10200
+    },
+    "Remeras Adultos": {
+      "Remera algodón": 20500,
+      "Remera poliéster": 18800,
+      "Remera ranglan": 20800
     }
   },
   "buzos-camperas": {
